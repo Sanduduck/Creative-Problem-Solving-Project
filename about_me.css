@@ -1,0 +1,32 @@
+section .about-self::after{
+    content: '';
+    clear: both;
+    display: block;
+}
+section .about-self .left img{
+    width: 100%;
+}
+section .about-self .left{
+    width: 50%;
+    float: left;
+}
+section .about-self .right{
+    width: 50%;
+    float: right;
+    padding: 0 2rem;
+}
+section .about-self .right h3{
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+}
+section .about-self .right h3 strong{
+    color: #ed4848;
+ }
+ section .about-self .right p{
+     font-size:1.15rem;
+     margin: 1rem 0;
+ }
+ section .about-self .right .social a{
+     font-size: 2.5rem;
+     margin-right: 0.2rem;
+ }

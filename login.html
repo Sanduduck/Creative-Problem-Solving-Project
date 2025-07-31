@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center; /* 수평 중앙 정렬 */
+            align-items: center; /* 수직 중앙 정렬 */
+            height: 100vh; /* 화면 전체 높이 */
+            margin: 0;
+        }
+        .login-wrapper {
+            width: 90vw; /* 화면 너비의 90% */
+            max-width: 400px; /* 최대 너비 400px */
+            height: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-wrapper h2 {
+            font-size: 24px;
+            color: #111111; 
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .login-wrapper input {
+            width: 100%; /* 입력 필드는 100% 너비 */
+            height: 48px;
+            padding: 0 10px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            background-color: #F8F8F8;
+            box-sizing: border-box;
+            border: none; /* 테두리 없애기 */
+        }
+        .login-wrapper input[type="submit"] {
+            width: 100%; /* 로그인 버튼도 100% 너비 */
+            color: white;
+            font-size: 16px;
+            background-color: #111111; 
+            margin-top: 20px;
+            border: none; /* 테두리 없애기 */
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px; /* 링크들 간의 간격 */
+        }
+        .links a {
+            color: #111111; 
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="text" id="userName" placeholder="Email" required>
+            <input type="password" id="userPassword" placeholder="Password" required>
+            <input type="submit" value="Login">
+            <p id="error-message" class="error" style="display: none;">Please enter valid credentials.</p>
+        </form>
+
+        <div class="links">
+            <a href="#">아이디 찾기</a>
+            <a href="#">비밀번호 찾기</a>
+            <a href="#">회원가입</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // 폼의 기본 제출 동작을 방지
+
+            // 입력값 가져오기
+            var userName = document.getElementById('userName').value;
+            var userPassword = document.getElementById('userPassword').value;
+
+            // 유효성 검사 (이메일과 비밀번호가 'admin'일 때만 로그인 성공)
+            if (userName === "" || userPassword === "") {
+                document.getElementById('error-message').innerText = "Please fill in all fields.";
+                document.getElementById('error-message').style.display = "block";
+            } else if (userName === "admin" && userPassword === "admin") {
+                document.getElementById('error-message').style.display = "none";
+                
+                // 로그인 성공 시 'home.html'로 이동
+                window.location.href = 'cctv.html';  // 원하는 페이지 경로로 변경
+            } else {
+                document.getElementById('error-message').innerText = "Invalid credentials. Please try again.";
+                document.getElementById('error-message').style.display = "block";
+            }
+        });
+    </script>
+
+</body>
+</html>
