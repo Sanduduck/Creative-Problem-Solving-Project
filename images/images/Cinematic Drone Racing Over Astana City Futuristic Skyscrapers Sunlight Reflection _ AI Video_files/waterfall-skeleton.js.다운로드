@@ -1,0 +1,124 @@
+;(() => {
+  window.__SSG_DOM_CONETENT_LOADED__ = Date.now()
+
+  const style = document.createElement('style')
+  style.textContent = `
+            .skeleton-img {
+              width: 100%;
+              display: block;
+            }`
+
+  document.head.appendChild(style)
+
+  if (!window.indexedDB) return
+
+  const HOME_CACHED_IMAGE_DB = 'ImageBlobDB'
+
+  const HOME_CACHED_IMAGE_STORE = 'blobs'
+
+  const request = indexedDB.open(HOME_CACHED_IMAGE_DB)
+
+  request.onsuccess = () => {
+    const db = request.result
+
+    const range = IDBKeyRange.bound(0, 50)
+
+    try {
+      const transaction = db.transaction(HOME_CACHED_IMAGE_STORE, 'readonly')
+
+      // 这里如果是首次进入，会报错：找不到表
+      const store = transaction.objectStore(HOME_CACHED_IMAGE_STORE)
+
+      const cursorRequest = store.openCursor(range)
+
+      // 从数据库获取 Blob
+      const cachedList = []
+
+      cursorRequest.onsuccess = () => {
+        const cursor = cursorRequest.result
+        if (cursor) {
+          cachedList.push(cursor.value) // 存储当前数据
+          cursor.continue() // 继续下一个
+        } else {
+          // 执行完成
+          // 过滤一下 被挤到后边的 column ，得到当前视窗宽度下的列数
+          // 瀑布流距顶 为 300+ 再加上 轮播图高度，这里取 800 为阈值
+
+          const columnItems = document.querySelectorAll('.waterfall-placeholder-column')
+
+          const listener = () => {
+            const collection = Array.from(
+              columnItems.length
+                ? columnItems
+                : document.querySelectorAll('.waterfall-placeholder-column')
+            )
+              .filter((node) => {
+                if (node.offsetTop > 800) node.style.height = '0px'
+                return node.offsetTop < 800
+              })
+              .sort((a, b) => a.offsetTop - b.offsetTop)
+
+            if (!collection.length) return
+
+            // 通过比例计算出轮播图元素高度
+            const carouselHeight = 20 / 57
+
+            const heights = new Array(collection.length).fill(0)
+
+            // 前两列默认加上 轮播图高度
+            heights[0] = carouselHeight
+            heights[1] = carouselHeight
+
+            const columns = new Array(collection.length).fill(0)
+
+            // 调整瀑布流样式
+            document.querySelector('#waterfall-placeholder').style.height = 'unset'
+
+            let count = 0
+
+            cachedList.forEach((item, index) => {
+              const columnIndex = heights.indexOf(Math.min(...heights))
+
+              const img = document.createElement('img')
+              img.className = 'skeleton-img'
+
+              const url = URL.createObjectURL(cachedList[index].blob)
+              img.src = url
+
+              img.onload = () => {
+                count++
+                if (count === cachedList.length) window.__SSG_IMAGE_RENDERED__ = Date.now()
+              }
+
+              if (!item.data) {
+                document.querySelector('.carousel')?.appendChild(img)
+              } else {
+                const height = item.data.resource.height / item.data.resource.width
+
+                const node = collection[columnIndex].childNodes[columns[columnIndex]]
+
+                node.style.aspectRatio = 'unset'
+
+                node.appendChild(img)
+
+                columns[columnIndex]++
+
+                heights[columnIndex] += height
+              }
+            })
+            window.__CACHED_HOME_IMAGE_LIST__ = cachedList.map(({ data }) => data)
+            window.removeEventListener('DOMContentLoaded', listener)
+          }
+
+          if (columnItems.length) {
+            listener()
+          } else {
+            window.addEventListener('DOMContentLoaded', listener)
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+})()
