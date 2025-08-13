@@ -235,7 +235,7 @@
 
       // MJPEG은 <img>로 바로 표시 가능. (RTSP는 브라우저 미지원 → HLS/WebRTC 필요)
       display.innerHTML = `
-        <p>${drone.name} <img src="../images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
+        <p>${drone.name} <img src="./images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
         <img src="${streamUrl}" id="cctv-image" alt="Live CCTV Stream" />
       `;
 
@@ -367,7 +367,7 @@
       });
     }
 
-    function openStorage() { alert('Path: ../창의문제해결프로젝트/images/'); }
+    function openStorage() { alert('Path: ./창의문제해결프로젝트/images/'); }
 
     window.onload = () => {
       renderRegionNames();
@@ -379,3 +379,4 @@
   </script>
 </body>
 </html>
+
