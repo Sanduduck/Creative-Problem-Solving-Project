@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone CCTV Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #map {
+            flex: 2;
+            height: 100%;
+        }
+
+        .right-panel {
+            flex: 1;
+            background-color: #f7f7f7;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-icon {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .search-icon:hover {
+            background-color: #333;
+        }
+
+        .search-history {
+            margin-top: 10px;
+            padding: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #000000;
+        }
+
+        .drone-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .drone-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .drone-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .drone-name {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .delete-btn {
+            background: #eee;
+            border: 1px solid #ccc;
+            color: #333;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .delete-btn:hover {
+            background: #e2e2e2;
+        }
+
+        .drone-display {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .drone-display i {
+            font-size: 60px;
+            color: #000000;
+        }
+
+        .drone-display p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #000000;
+        }
+
+        .cctv-expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            max-width: 60%;
+            max-height: 80%;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+            transition: transform 0.4s ease, top 0.4s ease, left 0.4s ease;
+        }
+
+        #cctv-image {
+            width: 80%;
+            transition: transform 0.4s ease;
+        }
+
+        .cctv-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        .repository {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .repository h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .repository:hover {
+            background-color: #171717;
+        }
+
+        /* 드론 추가 폼 */
+        .add-drone, .add-region {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #ddd;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .add-drone h4, .add-region h4 {
+            grid-column: 1 / -1;
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .add-drone input, .add-drone select, 
+        .add-region input {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .add-drone button, .add-region button {
+            grid-column: 1 / -1;
+            padding: 10px;
+            font-size: 15px;
+            background: #000;
+            color: #fff;
+            border: 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-error {
+            grid-column: 1 / -1;
+            color: #c62828;
+            font-size: 13px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <div class="right-panel">
+        <div class="search-container">
+            <input type="text" class="search-bar" id="search-bar" placeholder="Enter drone number (1-30)" onkeydown="checkEnter(event)" />
+            <button class="search-icon" onclick="searchDrone()">&#8594;</button>
+        </div>
+
+        <div class="drone-display" id="drone-display"></div>
+        <ul class="drone-list" id="drone-list"></ul>
+
+        <!-- 드론 추가 -->
+        <div class="add-drone">
+            <h4>Add Drone</h4>
+            <input id="add-name" type="text" placeholder="Drone name">
+            <select id="add-region"></select>
+            <input id="add-lat" type="number" step="any" placeholder="Latitude">
+            <input id="add-lng" type="number" step="any" placeholder="Longitude">
+            <button onclick="addDrone()">Add</button>
+            <div id="add-error" class="add-error"></div>
+        </div>
+
+        <!-- 지역 추가 -->
+        <div class="add-region">
+            <h4>Add Region</h4>
+            <input id="region-name" type="text" placeholder="Region name">
+            <button onclick="addRegion()">Add Region</button>
+            <div id="region-error" class="add-error"></div>
+        </div>
+
+        <button class="back-button" id="back-button" style="display: none;" onclick="goBack()">Back to Region</button>
+    </div>
+
+    <div class="repository" onclick="openStorage()">
+        <h3>Repository</h3>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const regionData = {
+            Seoul: [
+                { id: 1, name: "Drone 1", lat: 37.5665, lng: 126.9780 },
+                { id: 2, name: "Drone 2", lat: 37.5675, lng: 126.9790 }
+            ],
+            Busan: [
+                { id: 3, name: "Drone 3", lat: 35.1796, lng: 129.0756 }
+            ]
+        };
+
+        let currentRegion = null;
+        const markersById = new Map();
+        const map = L.map('map').setView([37.5665, 126.9780], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        function addDroneToMap(drone) {
+            const marker = L.marker([drone.lat, drone.lng]).addTo(map);
+            marker.on('click', () => {
+                displayDroneInfo(drone);
+                map.setView([drone.lat, drone.lng], 18);
+            });
+            markersById.set(drone.id, marker);
+        }
+
+        function removeDroneFromMap(droneId) {
+            const marker = markersById.get(droneId);
+            if (marker) {
+                map.removeLayer(marker);
+                markersById.delete(droneId);
+            }
+        }
+
+        function renderRegionList(region) {
+            const list = document.getElementById('drone-list');
+            list.innerHTML = '';
+            regionData[region].forEach(drone => {
+                const li = document.createElement('li');
+                li.className = 'drone-item';
+                li.innerHTML = `<span class="drone-name">${drone.name}</span>
+                                <button class="delete-btn">×</button>`;
+                li.querySelector('.drone-name').onclick = () => displayDroneInfo(drone);
+                li.querySelector('.delete-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    deleteDrone(region, drone.id);
+                };
+                list.appendChild(li);
+            });
+        }
+
+        function displayRegion(region) {
+            currentRegion = region;
+            renderRegionList(region);
+            document.getElementById('back-button').style.display = 'block';
+        }
+
+        function displayDroneInfo(drone) {
+            const display = document.getElementById('drone-display');
+            display.innerHTML = `
+                <p>${drone.name} @ (${drone.lat}, ${drone.lng})</p>
+                <img src="./images/cctv.png" id="cctv-image" />
+            `;
+            document.getElementById('back-button').style.display = 'block';
+            document.getElementById('cctv-image').onclick = () => toggleCCTVZoom();
+        }
+
+        function toggleCCTVZoom() {
+            const img = document.getElementById('cctv-image');
+            const overlay = document.querySelector('.cctv-overlay');
+            if (img.classList.contains('cctv-expanded')) {
+                img.classList.remove('cctv-expanded');
+                if (overlay) overlay.remove();
+            } else {
+                img.classList.add('cctv-expanded');
+                if (!overlay) {
+                    const newOverlay = document.createElement('div');
+                    newOverlay.className = 'cctv-overlay';
+                    document.body.appendChild(newOverlay);
+                }
+            }
+        }
+
+        function deleteDrone(region, id) {
+            regionData[region] = regionData[region].filter(d => d.id !== id);
+            removeDroneFromMap(id);
+            renderRegionList(region);
+            document.getElementById('drone-display').innerHTML = '';
+        }
+
+        function goBack() {
+            currentRegion = null;
+            document.getElementById('drone-display').innerHTML = '';
+            renderRegionNames();
+            document.getElementById('back-button').style.display = 'none';
+        }
+
+        function renderRegionNames() {
+            const list = document.getElementById('drone-list');
+            list.innerHTML = '';
+            Object.keys(regionData).forEach(region => {
+                const li = document.createElement('li');
+                li.className = 'drone-item';
+                li.innerHTML = `<span class="drone-name">${region}</span>`;
+                li.querySelector('.drone-name').onclick = () => displayRegion(region);
+                list.appendChild(li);
+            });
+        }
+
+        function searchDrone() {
+            const val = parseInt(document.getElementById('search-bar').value);
+            for (const region in regionData) {
+                const found = regionData[region].find(d => d.id === val);
+                if (found) {
+                    displayDroneInfo(found);
+                    map.setView([found.lat, found.lng], 18);
+                    document.getElementById('back-button').style.display = 'block';
+                    return;
+                }
+            }
+            alert('Not found');
+        }
+
+        function checkEnter(e) {
+            if (e.key === 'Enter') searchDrone();
+        }
+
+        function getNextDroneId() {
+            let max = 0;
+            for (const region in regionData) {
+                regionData[region].forEach(d => { if (d.id > max) max = d.id; });
+            }
+            return max + 1;
+        }
+
+        function addDrone() {
+            const name = document.getElementById('add-name').value.trim();
+            const lat = parseFloat(document.getElementById('add-lat').value);
+            const lng = parseFloat(document.getElementById('add-lng').value);
+            const region = document.getElementById('add-region').value;
+            if (!name || isNaN(lat) || isNaN(lng)) {
+                document.getElementById('add-error').innerText = 'Invalid input';
+                document.getElementById('add-error').style.display = 'block';
+                return;
+            }
+            document.getElementById('add-error').style.display = 'none';
+            const newDrone = { id: getNextDroneId(), name, lat, lng };
+            regionData[region].push(newDrone);
+            addDroneToMap(newDrone);
+            if (currentRegion === region) renderRegionList(region);
+        }
+
+        function addRegion() {
+            const name = document.getElementById('region-name').value.trim();
+            if (!name || regionData[name]) {
+                document.getElementById('region-error').innerText = 'Invalid or exists';
+                document.getElementById('region-error').style.display = 'block';
+                return;
+            }
+            document.getElementById('region-error').style.display = 'none';
+            regionData[name] = [];
+            renderRegionNames();
+            updateRegionDropdown();
+        }
+
+        function updateRegionDropdown() {
+            const sel = document.getElementById('add-region');
+            sel.innerHTML = '';
+            Object.keys(regionData).forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.innerText = r;
+                sel.appendChild(opt);
+            });
+        }
+
+        function openStorage() {
+            alert("Path: ./images/");
+        }
+
+        window.onload = () => {
+            renderRegionNames();
+            for (const region in regionData) {
+                regionData[region].forEach(drone => addDroneToMap(drone));
+            }
+            updateRegionDropdown();
+        };
+    </script>
+</body>
+</html>
