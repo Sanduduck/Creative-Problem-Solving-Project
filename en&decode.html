@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video Encrypt/Decrypt · Client‑Side (AES‑GCM + PBKDF2)</title>
+  <style>
+    :root{ --bg:#0b0b0e; --panel:#121214; --text:#e9ecf8; --muted:#a8a8b3; --acc:#e0e0e0; --err:#ff6b6b; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,#0a0a0f,#121213 40%,#0a0a0f); color:var(--text);} 
+    header{ padding:28px 24px; text-align:center; }
+    h1{ margin:0 0 6px; font-size:22px; }
+    p.sub{ margin:0; color:var(--muted); font-size:14px; }
+
+    .card{ max-width:880px; margin:24px auto; background:var(--panel); border:1px solid #1a1a22; border-radius:16px; padding:20px; box-shadow:0 10px 24px rgba(0,0,0,.35);}    
+    label{ display:block; font-size:13px; color:var(--muted); margin:14px 0 6px; }
+    input[type="file"], input[type="password"], select{ width:100%; padding:12px 12px; font-size:14px; color:var(--text); background:#101015; border:1px solid #2a2a33; border-radius:10px; outline:none; }
+    input[type="password"]{ letter-spacing: .08em; }
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px; font-weight:600; background:var(--acc); color:#0a0a0a; border:none; border-radius:10px; cursor:pointer; }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+    .muted{ color:var(--muted); font-size:12px; }
+    .actions{ display:flex; gap:10px; align-items:center; margin-top:16px; }
+    progress{ width:100%; height:10px; border-radius:999px; overflow:hidden; accent-color:var(--acc); }
+    .log{ white-space:pre-wrap; background:#101015; border:1px solid #2a2a33; border-radius:12px; padding:10px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:#cfe1ff; }
+    .err{ color:var(--err); }
+    .kbd{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#101015; border:1px solid #2a2a33; border-radius:6px; padding:2px 6px; }
+    .hint{ font-size:12px; color:var(--muted); }
+    /* --- minor visual tweaks --- */
+    :root{ --acc:#e0e0e0; /* neutral accent */ }
+    .btn{ transition:transform .06s ease, box-shadow .2s ease; box-shadow:0 6px 16px rgba(0,0,0,.25); }
+    .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px rgba(0,0,0,.3); }
+    .btn:active{ transform:translateY(0); }
+
+    /* --- drag & drop zone --- */
+    .dropzone{ margin-top:10px; border:2px dashed #2a2a37; border-radius:14px; padding:20px; background:#101015; cursor:pointer; user-select:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+    .dropzone:hover{ border-color:var(--acc); }
+    .dropzone.dragover{ border-color:var(--acc); background:#16161f; box-shadow:0 0 0 4px rgb(255 255 255 / .12) inset; }
+    .dz-inner{ display:flex; align-items:center; gap:12px; color:#cfe1ff; }
+    .dz-icon{ opacity:.9; }
+    .dz-text{ display:flex; flex-direction:column; line-height:1.25; }
+    .dz-text strong{ color:#e9ecf8; }
+    .dz-sub{ color:var(--muted); font-size:12px; }
+    .fileinfo{ margin-top:8px; color:#cfe1ff; font-size:12px; opacity:.9; }
+
+    /* --- styled file input button --- */
+    input[type="file"]{
+      background:#101015; border:1px solid #2a2a33; border-radius:12px;
+      padding:10px; color:var(--text);
+    }
+    input[type="file"]::file-selector-button{
+      margin-right:12px; padding:10px 14px; border:1px solid #2a2a37;
+      background:#162650; color:#e9ecf8; border-radius:10px; cursor:pointer;
+      transition:background .2s ease, border-color .2s ease, transform .06s ease;
+    }
+    input[type="file"]::file-selector-button:hover{
+      background:var(--acc); border-color:var(--acc); color:#0a0a0a;
+    }
+    input[type="file"]::file-selector-button:active{ transform: translateY(1px); }
+
+    .hint-inline{ display:block; margin-top:6px; color:var(--muted); }
+
+    /* --- make dropzone larger & centered --- */
+    .dropzone{ min-height:200px; padding:28px; display:flex; align-items:center; justify-content:center; }
+    .dz-text strong{ font-size:16px; }
+    .dz-sub{ font-size:13px; }
+
+    /* --- center hint & larger dropzone, result styles --- */
+    .hint-inline{ text-align:center; }
+    .dropzone{ min-height:220px; padding:32px; display:flex; align-items:center; justify-content:center; text-align:center; }
+    .dz-inner{ display:flex; flex-direction:column; align-items:center; gap:12px; color:#cfe1ff; }
+    .dz-icon{ opacity:.9; margin-bottom:6px; }
+    .dz-text{ display:flex; flex-direction:column; line-height:1.25; align-items:center; }
+    .dz-text strong{ color:#e9ecf8; font-size:16px; }
+    .dz-sub{ color:var(--muted); font-size:13px; }
+    .fileinfo{ margin-top:8px; color:#cfe1ff; font-size:12px; opacity:.9; text-align:center; }
+    .result{ margin-top:16px; background:#101015; border:1px solid #2a2a33; border-radius:12px; padding:12px; }
+    .result video, .result img { width:100%; max-height:360px; border-radius:10px; display:block; }
+
+    /* brand bar */
+    .brand{ display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:8px; }
+    .brand img{ height:clamp(40px, 7vw, 64px); width:auto; display:block; }
+    .brand-name{ font-weight:800; font-size:clamp(28px, 5.2vw, 40px); color:#ffffff; letter-spacing:.3px; }
+    /* brand/title bars */
+    .brandbar{ width:100%; background:#0a0a0d; border-bottom:1px solid #15151a; padding:10px 16px; margin: -8px 0 12px 0; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brandbar">
+      <div class="brand" aria-label="팀 로고와 이름">
+        <img src="./images/logo.png" alt="AlleyEye 로고" />
+        <span class="brand-name">AlleyEye</span>
+      </div>
+    </div>
+    <h1>Video Encrypt/Decrypt (100% Client‑Side)</h1>
+    <p class="sub">AES‑GCM(256) + PBKDF2‑SHA256(310k) · 파일은 서버로 업로드되지 않습니다.</p>
+  </header>
+
+  <main class="card">
+    <div class="row">
+      <div>
+        <label>모드</label>
+        <select id="mode">
+          <option value="enc">Encrypt (영상/이미지 → .venc)</option>
+          <option value="dec">Decrypt (.venc → 원본)</option>
+        </select>
+      </div>
+      <div>
+        <label>비밀번호 <span class="hint">(강력한 문장형 권장)</span></label>
+        <input type="password" id="pw" placeholder="예: boat river galaxy lemon" />
+      </div>
+    </div>
+
+    <label id="fileLabel">영상/이미지 파일</label>
+    <input id="file" type="file" accept="video/*,image/*,.venc" />
+
+    <div class="hint hint-inline">또는 아래 영역에 <strong>끌어다 놓기</strong> 가능합니다.</div>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="여기로 파일을 드롭하거나 클릭하여 선택">
+      <div class="dz-inner">
+        <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="currentColor" class="dz-icon"><path d="M12 16a1 1 0 0 1-1-1V8.41L8.7 10.7a1 1 0 1 1-1.4-1.42l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.42L13 8.41V15a1 1 0 0 1-1 1Zm-6 3a2 2 0 0 1-2-2V13a1 1 0 1 1 2 0v4h12v-4a1 1 0 1 1 2 0v4a2 2 0 0 1-2 2H6Z"/></svg>
+        <div class="dz-text"><strong>여기로 영상/이미지 파일 드래그</strong><span class="dz-sub">또는 클릭하거나 여기에 끌어다 놓기 (mp4, webm, png, jpg 등)</span></div>
+      </div>
+    </div>
+    <div id="fileInfo" class="fileinfo" aria-live="polite"></div>
+
+    <div class="actions">
+      <button class="btn" id="runBtn">실행</button>
+      <a id="dl" class="btn" style="display:none" download>결과 다운로드</a>
+    </div>
+
+    <label>진행률</label>
+    <progress id="prog" max="1" value="0"></progress>
+
+    <label>결과</label>
+    <div class="result" id="result">
+      <video id="previewVideo" controls style="display:none"></video>
+      <img id="previewImage" alt="이미지 미리보기" style="display:none;max-width:100%;max-height:360px;border-radius:10px;" />
+      <div id="resultInfo" class="muted"></div>
+    </div>
+
+    <label>로그</label>
+    <div class="log" id="log">대기 중…</div>
+    <p class="muted">참고: 큰 파일은 메모리를 많이 사용할 수 있습니다. 매우 큰 영상은 추후 <span class="kbd">chunked</span> 모드로 개선하세요.</p>
+  </main>
+
+  <script>
+  // ---------- Small helpers ----------
+  const $ = (s)=>document.querySelector(s);
+  const logEl = $('#log');
+  const progEl = $('#prog');
+  function log(msg, isErr=false){ logEl.textContent = msg; logEl.classList.toggle('err', !!isErr); }
+  function setProg(v){ progEl.value = Math.max(0, Math.min(1, v)); }
+
+  // ---------- File header layout ----------
+  // Custom envelope:
+  // [MAGIC(8)] [u32 algId] [u32 iterations] [u32 saltLen] [u32 ivLen] [u32 nameLen] [u32 mimeLen]
+  // [salt] [iv] [nameUtf8] [mimeUtf8] [ciphertext(AES-GCM)]
+  const MAGIC = new TextEncoder().encode('VIDENC01'); // 8 bytes
+  const ALG_ID = 1; // 1 = AES-GCM-256
+  const DEFAULT_ITERS = 310000;
+
+  function u32(n){ const b=new Uint8Array(4); new DataView(b.buffer).setUint32(0,n,true); return b; }
+  function rU32(u8,off){ return new DataView(u8.buffer,u8.byteOffset,u8.byteLength).getUint32(off,true); }
+  function concatBytes(...arrs){ let len=0; for(const a of arrs) len+=a.byteLength||a.length; const out=new Uint8Array(len); let off=0; for(const a of arrs){ const v=a instanceof Uint8Array? a : new Uint8Array(a); out.set(v, off); off+=v.byteLength; } return out; }
+  function sliceU8(u8, off, len){ return new Uint8Array(u8.buffer, u8.byteOffset+off, len); }
+  function equalBytes(a,b){ if(a.byteLength!==b.byteLength) return false; for(let i=0;i<a.byteLength;i++){ if(a[i]!==b[i]) return false; } return true; }
+
+  // ---------- Crypto ----------
+  async function deriveKey(password, salt, iterations=DEFAULT_ITERS){
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name:'PBKDF2', hash:'SHA-256', salt, iterations },
+      keyMaterial,
+      { name:'AES-GCM', length:256 },
+      false,
+      ['encrypt','decrypt']
+    );
+  }
+
+  async function encryptFile(file, password, onProgress){
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv   = crypto.getRandomValues(new Uint8Array(12));
+    const key  = await deriveKey(password, salt, DEFAULT_ITERS);
+
+    onProgress?.(0.05);
+    const pt = new Uint8Array(await file.arrayBuffer());
+    onProgress?.(0.2);
+
+    const ct = new Uint8Array(await crypto.subtle.encrypt({ name:'AES-GCM', iv }, key, pt));
+    onProgress?.(0.9);
+
+    const enc = new TextEncoder();
+    const nameBytes = enc.encode(file.name || 'file');
+    const mimeBytes = enc.encode(file.type || 'application/octet-stream');
+
+    const header = concatBytes(
+      MAGIC,
+      u32(ALG_ID), u32(DEFAULT_ITERS),
+      u32(salt.byteLength), u32(iv.byteLength),
+      u32(nameBytes.byteLength), u32(mimeBytes.byteLength),
+      salt, iv, nameBytes, mimeBytes
+    );
+
+    const blob = new Blob([header, ct], { type:'application/octet-stream' });
+    onProgress?.(1);
+    return { blob, suggestedName: (file.name || 'file') + '.venc' };
+  }
+
+  async function decryptFile(file, password, onProgress){
+    const u8 = new Uint8Array(await file.arrayBuffer());
+    let off = 0;
+
+    const magic = sliceU8(u8, off, MAGIC.byteLength); off += MAGIC.byteLength;
+    if(!equalBytes(magic, MAGIC)) throw new Error('잘못된 파일 형식(매직 헤더 불일치)');
+
+    const algId = rU32(u8, off); off += 4;
+    const iterations = rU32(u8, off); off += 4;
+    const saltLen = rU32(u8, off); off += 4;
+    const ivLen   = rU32(u8, off); off += 4;
+    const nameLen = rU32(u8, off); off += 4;
+    const mimeLen = rU32(u8, off); off += 4;
+
+    if(algId !== ALG_ID) throw new Error('지원하지 않는 알고리즘');
+
+    const salt = sliceU8(u8, off, saltLen); off += saltLen;
+    const iv   = sliceU8(u8, off, ivLen);   off += ivLen;
+    const nameBytes = sliceU8(u8, off, nameLen); off += nameLen;
+    const mimeBytes = sliceU8(u8, off, mimeLen); off += mimeLen;
+    const ct = sliceU8(u8, off, u8.byteLength - off);
+
+    const dec = new TextDecoder();
+    const origName = dec.decode(nameBytes);
+    const origMime = dec.decode(mimeBytes) || 'application/octet-stream';
+
+    const key = await deriveKey(password, salt, iterations);
+    onProgress?.(0.5);
+    let ptBuf;
+    try{
+      ptBuf = await crypto.subtle.decrypt({ name:'AES-GCM', iv }, key, ct);
+    }catch(e){
+      throw new Error('복호화 실패: 비밀번호가 틀렸거나 파일이 손상되었습니다.');
+    }
+
+    const blob = new Blob([ptBuf], { type: origMime });
+    onProgress?.(1);
+
+    // 원래 확장자를 유지하려고 시도
+    const suggestedName = origName && origName.trim() ? origName : (file.name.replace(/\.venc$/i,'') || 'file.bin');
+    return { blob, suggestedName };
+  }
+
+  // ---------- UI wiring ----------
+  const modeSel = $('#mode');
+  const fileInput = $('#file');
+  const runBtn = $('#runBtn');
+  const dl = $('#dl');
+  const pwInput = $('#pw');
+  const fileLabel = $('#fileLabel');
+  const drop = $('#dropzone');
+  const fileInfo = $('#fileInfo');
+  const resultInfo = $('#resultInfo');
+  const previewVideo = $('#previewVideo');
+  const previewImage = $('#previewImage');
+  let lastURL = null;
+
+  function refreshLabels(){
+    if(modeSel.value === 'enc'){
+      fileLabel.textContent = '영상/이미지 파일';
+      fileInput.accept = 'video/*,image/*';
+      if (drop) drop.querySelector('.dz-text strong').textContent = '여기로 영상/이미지 파일 드래그';
+      if (drop) drop.querySelector('.dz-sub').textContent = '또는 클릭하거나 여기에 끌어다 놓기 (mp4, webm, png, jpg 등)';
+    } else {
+      fileLabel.textContent = '암호화 파일(.venc)';
+      fileInput.accept = '.venc,application/octet-stream';
+      if (drop) drop.querySelector('.dz-text strong').textContent = '여기로 .venc 파일 드래그';
+      if (drop) drop.querySelector('.dz-sub').textContent = '또는 클릭하거나 여기에 끌어다 놓기';
+    }
+  }
+  modeSel.addEventListener('change', refreshLabels);
+  refreshLabels();
+
+  // ---------- Drag & Drop wiring ----------
+  function setSelectedFile(file){
+    if(!file) return;
+    // put into <input type=file>
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+    fileInfo.textContent = `선택됨: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+  }
+
+  if (drop){
+    drop.addEventListener('click', ()=> fileInput.click());
+    drop.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); fileInput.click(); }});
+    ['dragenter','dragover'].forEach(ev=> drop.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); drop.classList.add('dragover'); }));
+    ;['dragleave','dragend','mouseout'].forEach(ev=> drop.addEventListener(ev, ()=> drop.classList.remove('dragover')));
+    drop.addEventListener('drop', (e)=>{
+      e.preventDefault(); e.stopPropagation(); drop.classList.remove('dragover');
+      const file = e.dataTransfer?.files?.[0];
+      if(!file){ return; }
+      const mode = modeSel.value;
+      if(mode==='enc'){
+        const t = (file.type||'');
+        if(!(t.startsWith('video') || t.startsWith('image'))){ log('영상/이미지 파일이 아닙니다. 계속 시도할 수는 있지만 실패할 수 있어요.', true); }
+      }else{
+        if(!/\.venc$/i.test(file.name)){ log('.venc 파일을 넣어주세요 (암호화된 파일).', true); }
+      }
+      setSelectedFile(file);
+    });
+  }
+
+  fileInput.addEventListener('change', ()=>{ const f=fileInput.files?.[0]; if(f) setSelectedFile(f); });
+
+  runBtn.addEventListener('click', async ()=>{
+    dl.style.display='none';
+    if(lastURL){ URL.revokeObjectURL(lastURL); lastURL=null; }
+    previewVideo.style.display='none';
+    previewVideo.removeAttribute('src');
+    previewImage.style.display='none';
+    previewImage.removeAttribute('src');
+    resultInfo.textContent='';
+
+    const mode = modeSel.value;
+    const file = fileInput.files && fileInput.files[0];
+    const pw = pwInput.value || '';
+
+    if(!file){ log('파일을 선택하세요.', true); return; }
+    if(!pw){ log('비밀번호를 입력하세요.', true); return; }
+    if(!window.crypto?.subtle){ log('이 브라우저는 WebCrypto(SubtleCrypto)를 지원하지 않습니다.', true); return; }
+
+    runBtn.disabled = true; setProg(0); log('처리 중…');
+    try{
+      if(mode==='enc'){
+        const { blob, suggestedName } = await encryptFile(file, pw, setProg);
+        const url = URL.createObjectURL(blob); lastURL = url;
+        dl.href = url;
+        dl.download = suggestedName;
+        dl.textContent = '암호화 파일 다운로드';
+        dl.style.display = 'inline-flex';
+        log('암호화 완료');
+        resultInfo.textContent = `암호화 완료 · 파일명: ${suggestedName} · 크기: ${formatBytes(blob.size)}`;
+      }else{
+        const { blob, suggestedName } = await decryptFile(file, pw, setProg);
+        const url = URL.createObjectURL(blob); lastURL = url;
+        dl.href = url;
+        dl.download = suggestedName;
+        dl.textContent = '복호화 파일 다운로드';
+        dl.style.display = 'inline-flex';
+        log('복호화 완료');
+        if((blob.type||'').startsWith('video')){
+          previewVideo.src = url;
+          previewVideo.style.display = 'block';
+        } else if ((blob.type||'').startsWith('image')) {
+          previewImage.src = url;
+          previewImage.style.display = 'block';
+        }
+        resultInfo.textContent = `복호화 완료 · 파일명: ${suggestedName} · 크기: ${formatBytes(blob.size)} · 타입: ${blob.type||'application/octet-stream'}`;
+      }
+    }catch(e){
+      console.error(e);
+      log(e.message || String(e), true);
+    }finally{
+      runBtn.disabled = false;
+    }
+  });
+
+  function formatBytes(bytes){
+    if(bytes === 0) return '0 B';
+    const k = 1024; const sizes = ['B','KB','MB','GB','TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+  </script>
+</body>
+</html>
