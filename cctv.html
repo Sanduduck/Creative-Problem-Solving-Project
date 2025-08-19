@@ -145,6 +145,25 @@
       #cctv-image { width: 100%; max-width: none; }
       .cctv-expanded { max-width: 95%; max-height: 95%; }
     }
+    /* ===== 모바일에서 Add Region을 Add Drone처럼 1열 풀넓이로 ===== */
+@media (max-width: 768px){
+  .forms .region-row{
+    display: grid;              /* flex → grid 로 바꿔서 한 줄씩 쌓이게 */
+    grid-template-columns: 1fr; /* 1열 */
+    gap: 8px;
+  }
+  .forms .region-row input{
+    width: 100%;
+    font-size: 16px;            /* 터치 타겟 키우기 */
+    min-height: 40px;
+  }
+  .forms .region-row button{
+    width: 100%;                /* 버튼도 풀넓이 */
+    padding: 10px 24px;
+    font-size: 16px;
+  }
+}
+
   </style>
 </head>
 <body>
