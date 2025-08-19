@@ -133,40 +133,53 @@
       .accounts_image{ display:none; }
       .accounts_container{ max-width:560px; }
     }
-    /* 모바일에서만 대체 배치 */
-.mobile-hero { display: none; }
 
-@media (max-width: 992px){
-  /* 왼쪽 컬럼 이미지는 숨김 (기존 유지) */
-  .accounts_image { display: none !important; }
+    /* ===== 모바일 전용 배너(우측 폼 상단) ===== */
+    .mobile-hero { display: none; }
 
-  /* 컨테이너 높이 고정 해제: 잘림/깨짐 방지 */
-  .accounts_container{
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
+    @media (max-width: 992px){
+      /* 좌측 큰 이미지는 숨김(중복 선언 무방) */
+      .accounts_image { display: none !important; }
 
-  /* 같은 이미지를 폼 위 배너로 노출 */
-  .mobile-hero{
-    display: block;
-    width: 100%;
-    margin: 0;
-  }
-  .mobile-hero img{
-    display: block;
-    width: 100%;
-    height: auto;          /* 왜곡 방지 */
-    aspect-ratio: 16 / 9;  /* 보기 좋은 비율로 크롭(원하면 주석 처리) */
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-  }
+      /* 컨테이너 고정 높이 해제 → 배너/폼 자연 확장 */
+      .accounts_container{
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
 
-  /* 배너가 들어오니 타이틀 상단 여백만 살짝 조정(선택) */
-  .accounts_forms .title{ padding-top: 16px; }
-}
+      /* 우측 폼 컬럼 상단 배너 */
+      .mobile-hero{
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+      .mobile-hero img{
+        display: block;
+        width: 100%;
+        height: auto;            /* 이미지 자체 비율 유지 */
+        aspect-ratio: 1 / 2;     /* 2:4 비율(=1:2)로 보기 좋게 */
+        object-fit: cover;       /* 칸에 꽉 채우고 넘치면 자연 크롭 */
+        object-position: 50% 40%;
+        border-radius: 10px 10px 0 0;
+      }
 
+      /* 배너 추가에 따른 제목 상단 여백 보정 */
+      .accounts_forms .title{ padding-top: 16px; }
+    }
+
+    /* 데스크탑/노트북 강제 복구(선언 순서상 맨 아래) */
+    @media (min-width: 993px){
+      .accounts_image{ display:block !important; }
+      .mobile-hero{ display:none !important; }
+      .accounts_container{
+        height: 550px !important;
+        min-height: 550px !important;
+        max-height: 100% !important;
+        overflow: hidden !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -175,15 +188,6 @@
       <div class="row h-100">
         <!-- 좌측 이미지 -->
         <div class="col col-sm-12 col-md-12 col-lg-8 m-0 p-0 w-100 h-100 accounts_col">
-          <!-- 모바일 전용: 기존 이미지 그대로 사용 -->
-<div class="mobile-hero" aria-hidden="true">
-  <img
-    src="https://img.freepik.com/free-photo/social-media-instagram-digital-marketing-concept-3d-rendering_106244-1717.jpg?w=1480"
-    alt=""
-    loading="lazy"
-  />
-</div>
-
           <div class="accounts_image w-100 h-100">
             <img src="https://img.freepik.com/free-photo/social-media-instagram-digital-marketing-concept-3d-rendering_106244-1717.jpg?w=1480"
                  alt="accounts_image" class="img-fluid w-100 h-100" />
@@ -192,6 +196,12 @@
 
         <!-- 우측 폼 -->
         <div class="col col-sm-12 col-md-12 col-lg-4 m-0 p-0 accounts_col">
+
+          <!-- ✅ 모바일 전용 히어로: 우측 폼 컬럼 '맨 위' -->
+          <div class="mobile-hero" aria-hidden="true">
+            <img src="./images/login.png" alt="" loading="lazy">
+          </div>
+
           <!-- Sign Up -->
           <div class="accounts_forms signup_form w-100 h-100" id="signup">
             <div class="title mt-4 p-4 w-100">
@@ -280,6 +290,7 @@
               <span class="text-center">Forgot password</span>
             </div>
           </div>
+
         </div>
         <!-- /우측 폼 -->
       </div>
