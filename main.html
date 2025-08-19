@@ -766,7 +766,44 @@ h1.brand {
     font-size: 1.45rem;
   }
 }
-    
+    /* ===== 모바일: 헤더 최소화(로고 + AlleyEye만) ===== */
+@media (max-width: 768px){
+  :root { --header-h: 60px; }
+
+  /* 고정 헤더가 본문 가리는 것 방지 */
+  body { padding-top: var(--header-h); }
+
+  header{
+    height: var(--header-h);
+    padding: 8px 12px;
+    background: #000;
+    z-index: 10000;
+  }
+
+  /* 한 줄 정렬 + 가운데 정렬(원하면 flex-start로 바꿔 왼쪽 정렬) */
+  header .container{
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important; /* ← 왼쪽 정렬 원하면 flex-start */
+    gap: .5rem;
+  }
+
+  /* 메뉴/햄버거 완전 숨김 */
+  header nav,
+  header .menu-toggle{
+    display: none !important;
+  }
+
+  /* 브랜드(로고 + 텍스트)만 보이도록 */
+  h1.brand{ margin: 0; display: flex; align-items: center; gap: .5rem; }
+  .logo-img{ height: 28px; width: auto; display: block; }
+  .logo-btn a{
+    font-size: 1.15rem;   /* 살짝 크게 */
+    font-weight: 700;
+    color: #fff;
+  }
+}
+
 
     </style>
 </head>
