@@ -133,6 +133,40 @@
       .accounts_image{ display:none; }
       .accounts_container{ max-width:560px; }
     }
+    /* 모바일에서만 대체 배치 */
+.mobile-hero { display: none; }
+
+@media (max-width: 992px){
+  /* 왼쪽 컬럼 이미지는 숨김 (기존 유지) */
+  .accounts_image { display: none !important; }
+
+  /* 컨테이너 높이 고정 해제: 잘림/깨짐 방지 */
+  .accounts_container{
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* 같은 이미지를 폼 위 배너로 노출 */
+  .mobile-hero{
+    display: block;
+    width: 100%;
+    margin: 0;
+  }
+  .mobile-hero img{
+    display: block;
+    width: 100%;
+    height: auto;          /* 왜곡 방지 */
+    aspect-ratio: 16 / 9;  /* 보기 좋은 비율로 크롭(원하면 주석 처리) */
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+
+  /* 배너가 들어오니 타이틀 상단 여백만 살짝 조정(선택) */
+  .accounts_forms .title{ padding-top: 16px; }
+}
+
   </style>
 </head>
 <body>
@@ -141,6 +175,15 @@
       <div class="row h-100">
         <!-- 좌측 이미지 -->
         <div class="col col-sm-12 col-md-12 col-lg-8 m-0 p-0 w-100 h-100 accounts_col">
+          <!-- 모바일 전용: 기존 이미지 그대로 사용 -->
+<div class="mobile-hero" aria-hidden="true">
+  <img
+    src="https://img.freepik.com/free-photo/social-media-instagram-digital-marketing-concept-3d-rendering_106244-1717.jpg?w=1480"
+    alt=""
+    loading="lazy"
+  />
+</div>
+
           <div class="accounts_image w-100 h-100">
             <img src="https://img.freepik.com/free-photo/social-media-instagram-digital-marketing-concept-3d-rendering_106244-1717.jpg?w=1480"
                  alt="accounts_image" class="img-fluid w-100 h-100" />
