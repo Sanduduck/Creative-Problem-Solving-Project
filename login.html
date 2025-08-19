@@ -134,7 +134,7 @@
       .accounts_container{ max-width:560px; }
     }
 
-    /* ===== 모바일 전용 배너(우측 폼 상단) ===== */
+    /* ===== 모바일 전용 배너 (#signup 내부) ===== */
     .mobile-hero { display: none; }
 
     @media (max-width: 992px){
@@ -149,18 +149,18 @@
         overflow: visible !important;
       }
 
-      /* 우측 폼 컬럼 상단 배너 */
-      .mobile-hero{
+      /* #signup 안에 있는 배너만 모바일에서 노출 */
+      #signup .mobile-hero{
         display: block;
         width: 100%;
         margin: 0;
       }
-      .mobile-hero img{
+      #signup .mobile-hero img{
         display: block;
         width: 100%;
-        height: auto;            /* 이미지 자체 비율 유지 */
-        aspect-ratio: 1 / 2;     /* 2:4 비율(=1:2)로 보기 좋게 */
-        object-fit: cover;       /* 칸에 꽉 채우고 넘치면 자연 크롭 */
+        height: auto;
+        aspect-ratio: 1 / 2;   /* 2:4 비율(세로형) */
+        object-fit: cover;
         object-position: 50% 40%;
         border-radius: 10px 10px 0 0;
       }
@@ -197,13 +197,14 @@
         <!-- 우측 폼 -->
         <div class="col col-sm-12 col-md-12 col-lg-4 m-0 p-0 accounts_col">
 
-          <!-- ✅ 모바일 전용 히어로: 우측 폼 컬럼 '맨 위' -->
-          <div class="mobile-hero" aria-hidden="true">
-            <img src="./images/login.png" alt="" loading="lazy">
-          </div>
-
-          <!-- Sign Up -->
+          <!-- Sign Up (초기 비표시: .signup_form) -->
           <div class="accounts_forms signup_form w-100 h-100" id="signup">
+
+            <!-- ✅ 모바일 전용 배너: 제목 위 (회원가입 화면일 때만 보임) -->
+            <div class="mobile-hero" aria-hidden="true">
+              <img src="./images/login.png" alt="" loading="lazy">
+            </div>
+
             <div class="title mt-4 p-4 w-100">
               <h1>Sign Up</h1>
               <p class="mt-3">Create your account to get started.</p>
@@ -257,7 +258,7 @@
             </div>
           </div>
 
-          <!-- Sign In -->
+          <!-- Sign In (초기 표시) -->
           <div class="accounts_forms w-100 h-100" id="login">
             <div class="title mt-4 p-4 w-100">
               <h1>Sign In</h1>
