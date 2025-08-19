@@ -128,56 +128,57 @@
     .msg-error{color:#c62828;font-size:1.3rem;margin-top:-6px;margin-bottom:12px;display:none;}
     .msg-ok{color:#1b5e20;font-size:1.3rem;margin-top:-6px;margin-bottom:12px;display:none;}
 
-    /* 반응형 */
+    /* 반응형: 데스크탑 기본 유지 */
     @media (max-width:992px){
-      .accounts_image{ display:none; }
+      .accounts_image{ display:none; }       /* 모바일에서 좌측 큰 이미지 숨김 */
       .accounts_container{ max-width:560px; }
     }
 
-    /* ===== 모바일 전용 배너 (#signup 내부) ===== */
-    .mobile-hero { display: none; }
+    /* ===== 모바일 전용 배너 (#signup 내부) + 모드 토글 ===== */
+    .mobile-hero{ display:none; }
 
     @media (max-width: 992px){
-      /* 좌측 큰 이미지는 숨김(중복 선언 무방) */
-      .accounts_image { display: none !important; }
-
-      /* 컨테이너 고정 높이 해제 → 배너/폼 자연 확장 */
+      /* 기본(=로그인 모드): 데스크탑 느낌 유지 */
       .accounts_container{
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        overflow: visible !important;
+        height:550px;
+        min-height:550px;
+        overflow:hidden;
       }
 
-      /* #signup 안에 있는 배너만 모바일에서 노출 */
-      #signup .mobile-hero{
-        display: block;
-        width: 100%;
-        margin: 0;
+      /* 회원가입 모드일 때만: 배너 보이고, 컨테이너 높이 자동 확장 */
+      body.mode-signup .accounts_container{
+        height:auto;
+        min-height:0;
+        overflow:visible;
       }
-      #signup .mobile-hero img{
-        display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1 / 2;   /* 2:4 비율(세로형) */
-        object-fit: cover;
-        object-position: 50% 40%;
-        border-radius: 10px 10px 0 0;
+      body.mode-signup #signup .mobile-hero{
+        display:block;
+        width:100%;
+        margin:0;
+      }
+      body.mode-signup #signup .mobile-hero img{
+        display:block;
+        width:100%;
+        height:auto;
+        aspect-ratio: 1 / 2;   /* 2:4 비율 */
+        object-fit:cover;       /* 칸에 꽉 차게 */
+        object-position:50% 40%;
+        border-radius:10px 10px 0 0;
       }
 
       /* 배너 추가에 따른 제목 상단 여백 보정 */
-      .accounts_forms .title{ padding-top: 16px; }
+      .accounts_forms .title{ padding-top:16px; }
     }
 
-    /* 데스크탑/노트북 강제 복구(선언 순서상 맨 아래) */
+    /* 데스크탑/노트북 강제 복구(명시적) */
     @media (min-width: 993px){
       .accounts_image{ display:block !important; }
       .mobile-hero{ display:none !important; }
       .accounts_container{
-        height: 550px !important;
-        min-height: 550px !important;
-        max-height: 100% !important;
-        overflow: hidden !important;
+        height:550px !important;
+        min-height:550px !important;
+        max-height:100% !important;
+        overflow:hidden !important;
       }
     }
   </style>
@@ -200,7 +201,7 @@
           <!-- Sign Up (초기 비표시: .signup_form) -->
           <div class="accounts_forms signup_form w-100 h-100" id="signup">
 
-            <!-- ✅ 모바일 전용 배너: 제목 위 (회원가입 화면일 때만 보임) -->
+            <!-- ✅ 모바일 전용 배너: 회원가입 화면일 때만 보임 -->
             <div class="mobile-hero" aria-hidden="true">
               <img src="./images/login.png" alt="" loading="lazy">
             </div>
@@ -328,9 +329,16 @@
       }
     }
 
-    /* ========= 폼 전환 ========= */
+    /* ========= 폼 전환 + 모드 클래스 토글 ========= */
     const to_signup = document.getElementById('to_signup');
     const to_login  = document.getElementById('to_login');
+
+    function updateModeClass(){
+      // #signup이 보이면(= .signup_form 클래스가 없으면) 회원가입 모드
+      const signupHidden = document.getElementById('signup').classList.contains('signup_form');
+      document.body.classList.toggle('mode-signup', !signupHidden);
+    }
+
     function let_change(){
       const login  = document.getElementById('login');
       const signup = document.getElementById('signup');
@@ -339,9 +347,15 @@
       // 메시지 초기화
       const e1=document.getElementById('login-error'); if(e1) e1.style.display='none';
       const e2=document.getElementById('signup-msg');  if(e2) e2.style.display='none';
+      // 모드 클래스 갱신
+      updateModeClass();
     }
+
     if(to_signup) to_signup.addEventListener('click', let_change);
     if(to_login)  to_login.addEventListener('click', let_change);
+
+    // 초기 모드 설정(처음엔 로그인 화면이므로 mode-signup = false)
+    document.addEventListener('DOMContentLoaded', updateModeClass);
 
     /* ========= 계정 저장/조회 (localStorage) ========= */
     const LS_USERS = 'ae_users_v1';
