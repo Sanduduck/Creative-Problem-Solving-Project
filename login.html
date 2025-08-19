@@ -181,6 +181,35 @@
         overflow:hidden !important;
       }
     }
+    @media (max-width: 992px){
+  /* 0) 두 컬럼이 위아래로 쌓일 때, 각 컬럼 높이를 자동으로 */
+  .accounts_col{ height: auto !important; }
+
+  /* 1) 좌측 이미지 다시 보이게 (기존 hide 덮어쓰기) */
+  .accounts_image{ 
+    display: block !important; 
+    height: 220px;              /* 모바일에선 배너 높이로 */
+    overflow: hidden; 
+  }
+  .accounts_image img{
+    width: 100%;
+    height: 100% !important;    /* Bootstrap .h-100 덮어쓰기 */
+    object-fit: cover;          /* 칸에 꽉 채우며 크롭 */
+    object-position: 50% 40%;
+    border-radius: 10px 10px 0 0;
+  }
+
+  /* 2) 컨테이너도 자동 높이 (이미지+폼이 다 보이게) */
+  .accounts_container{
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* 3) signup 내부에 넣어둔 모바일 전용 배너는 중복 방지를 위해 숨김 */
+  .mobile-hero{ display: none !important; }
+}
   </style>
 </head>
 <body>
