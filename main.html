@@ -803,6 +803,30 @@ h1.brand {
     color: #fff;
   }
 }
+/* ===== 모바일: 로고 & 타이틀 확대 ===== */
+@media (max-width: 768px){
+  /* 헤더 높이도 자동으로 조금 키움 */
+  :root { --header-h: clamp(64px, 12vw, 84px); }
+
+  header { padding: 10px 14px; }
+  header .container { gap: .75rem; }
+
+  /* 로고 이미지 크게 */
+  .logo-img{
+    height: clamp(36px, 9vw, 56px);  /* 하한↑, 상한↑ */
+    width: auto;
+    display: block;
+  }
+
+  /* AlleyEye 텍스트 크게 */
+  .logo-btn a{
+    font-size: clamp(1.25rem, 5.2vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: .2px;
+    color: #fff; /* 대비 보장 */
+    line-height: 1.1;
+  }
+}
 
 
     </style>
