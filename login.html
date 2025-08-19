@@ -128,9 +128,9 @@
     .msg-error{color:#c62828;font-size:1.3rem;margin-top:-6px;margin-bottom:12px;display:none;}
     .msg-ok{color:#1b5e20;font-size:1.3rem;margin-top:-6px;margin-bottom:12px;display:none;}
 
-    /* 반응형: 데스크탑 기본 유지 */
+    /* 반응형 (기본) */
     @media (max-width:992px){
-      .accounts_image{ display:none; }       /* 모바일에서 좌측 큰 이미지 숨김 */
+      .accounts_image{ display:none; }     /* 모바일에서 좌측 큰 이미지 숨김 */
       .accounts_container{ max-width:560px; }
     }
 
@@ -138,21 +138,21 @@
     .mobile-hero{ display:none; }
 
     @media (max-width: 992px){
-      /* 기본(=로그인 모드): 데스크탑 느낌 유지 */
+      /* 기본(로그인 모드): 고정 높이 유지 */
       .accounts_container{
         height:550px;
         min-height:550px;
         overflow:hidden;
       }
 
-      /* 회원가입 모드일 때만: 배너 보이고, 컨테이너 높이 자동 확장 */
+      /* 회원가입 모드에서만: 배너 표시 + 높이 자동 확장 */
       body.mode-signup .accounts_container{
         height:auto;
         min-height:0;
         overflow:visible;
       }
       body.mode-signup #signup .mobile-hero{
-        display:block;
+        display:block !important;
         width:100%;
         margin:0;
       }
@@ -160,8 +160,8 @@
         display:block;
         width:100%;
         height:auto;
-        aspect-ratio: 1 / 2;   /* 2:4 비율 */
-        object-fit:cover;       /* 칸에 꽉 차게 */
+        aspect-ratio: 1 / 2;   /* 2:4 비율(=세로형) */
+        object-fit:cover;       /* 칸에 꽉 채움 */
         object-position:50% 40%;
         border-radius:10px 10px 0 0;
       }
@@ -170,7 +170,7 @@
       .accounts_forms .title{ padding-top:16px; }
     }
 
-    /* 데스크탑/노트북 강제 복구(명시적) */
+    /* 데스크탑/노트북 복구(명시적) */
     @media (min-width: 993px){
       .accounts_image{ display:block !important; }
       .mobile-hero{ display:none !important; }
@@ -201,9 +201,9 @@
           <!-- Sign Up (초기 비표시: .signup_form) -->
           <div class="accounts_forms signup_form w-100 h-100" id="signup">
 
-            <!-- ✅ 모바일 전용 배너: 회원가입 화면일 때만 보임 -->
+            <!-- ✅ 모바일 전용 배너: 회원가입 화면에서만 보임 -->
             <div class="mobile-hero" aria-hidden="true">
-              <img src="./images/login.png" alt="" loading="lazy">
+              <img src="./images/login.png" alt="" width="800" height="1600">
             </div>
 
             <div class="title mt-4 p-4 w-100">
@@ -337,6 +337,15 @@
       // #signup이 보이면(= .signup_form 클래스가 없으면) 회원가입 모드
       const signupHidden = document.getElementById('signup').classList.contains('signup_form');
       document.body.classList.toggle('mode-signup', !signupHidden);
+
+      // 회원가입 화면일 때 이미지 로드 보장 (숨김 상태/lazy 이슈 대응)
+      if (!signupHidden) {
+        const hero = document.querySelector('#signup .mobile-hero img');
+        if (hero) {
+          hero.loading = 'eager';  // 지원 브라우저에서 즉시 로드
+          hero.src = hero.src;     // 강제 리로드 트릭(사파리 등)
+        }
+      }
     }
 
     function let_change(){
@@ -354,7 +363,7 @@
     if(to_signup) to_signup.addEventListener('click', let_change);
     if(to_login)  to_login.addEventListener('click', let_change);
 
-    // 초기 모드 설정(처음엔 로그인 화면이므로 mode-signup = false)
+    // 초기 모드 설정(처음엔 로그인 화면)
     document.addEventListener('DOMContentLoaded', updateModeClass);
 
     /* ========= 계정 저장/조회 (localStorage) ========= */
@@ -386,7 +395,7 @@
         const buf = await crypto.subtle.digest('SHA-256', enc);
         return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
       }else{
-        // Fallback(보안 약함): 그냥 그대로 저장 (구형 브라우저 대비)
+        // Fallback(보안 약함)
         return 'plain:' + text;
       }
     }
@@ -405,7 +414,6 @@
         const cpass = document.getElementById('cpass').value || '';
         const msg   = document.getElementById('signup-msg');
 
-        // 간단 검증
         if(!email || !pass || !cpass){
           msg.textContent = '모든 필드를 입력해주세요.'; msg.style.display='block'; return;
         }
@@ -416,18 +424,15 @@
           msg.textContent = '비밀번호가 일치하지 않습니다.'; msg.style.display='block'; return;
         }
 
-        // 이미 존재?
         const users = loadUsers();
         if(users[email]){
           msg.textContent = '이미 존재하는 아이디입니다.'; msg.style.display='block'; return;
         }
 
-        // 저장
         const passwordHash = await sha256(pass);
         users[email] = { email, passwordHash, fname, lname, role:'viewer', createdAt: Date.now() };
         saveUsers(users);
 
-        // 자동 로그인 후 이동 (viewer)
         localStorage.setItem('ae_role','viewer');
         localStorage.setItem('ae_user', email);
 
@@ -455,7 +460,6 @@
           err.textContent = '아이디와 비밀번호를 입력하세요.'; err.style.display='block'; return;
         }
 
-        // 관리자 특례
         if(id === 'admin' && pw === 'admin'){
           localStorage.setItem('ae_role','admin');
           localStorage.setItem('ae_user', id);
@@ -464,7 +468,6 @@
           return;
         }
 
-        // 사용자 조회
         const users = loadUsers();
         const u = users[id];
         if(!u){
@@ -475,7 +478,6 @@
           err.textContent = '비밀번호가 올바르지 않습니다.'; err.style.display='block'; return;
         }
 
-        // 로그인 성공 (역할: 저장된 값, 기본 viewer)
         localStorage.setItem('ae_role', u.role || 'viewer');
         localStorage.setItem('ae_user', u.email);
         err.style.display = 'none';
