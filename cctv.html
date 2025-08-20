@@ -398,7 +398,7 @@
 
       // crossorigin="anonymous" 필수 (서버 CORS 허용 필요)
       display.innerHTML = `
-        <p>${drone.name} <img src="../images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
+        <p>${drone.name} <img src="./images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
         <img src="${streamUrl}" id="cctv-image" alt="Live CCTV Stream" crossorigin="anonymous" />
       `;
 
@@ -913,3 +913,4 @@
   </script>
 </body>
 </html>
+
