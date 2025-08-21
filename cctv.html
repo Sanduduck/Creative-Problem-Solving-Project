@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
   <style>
-    /* ====== Layout & Global ====== */
     body {
       font-family: Arial, sans-serif;
       display: flex;
@@ -25,22 +24,16 @@
       justify-content: flex-start;
       overflow-y: auto;
     }
-
-    /* ====== Search ====== */
     .search-container { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
     .search-bar { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
     .search-icon { background-color: #000; color: #fff; border: none; padding: 10px 14px; border-radius: 4px; cursor: pointer; }
     .search-icon:hover { background-color: #333; }
-
-    /* ====== Lists ====== */
     .drone-list { list-style-type: none; padding: 0; margin: 0; }
     .drone-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; border-bottom: 1px solid #ddd; }
     .drone-item:hover { background-color: #f0f0f0; }
     .drone-name { cursor: pointer; flex: 1; }
     .delete-btn { background: #eee; border: 1px solid #ccc; color: #333; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-weight: bold; line-height: 1; }
     .delete-btn:hover { background: #e2e2e2; }
-
-    /* ====== Drone detail / CCTV ====== */
     .drone-display { margin-top: 20px; text-align: center; }
     .drone-display p { font-size: 18px; margin-top: 10px; }
 
@@ -56,23 +49,18 @@
       box-shadow: 0 0 20px rgba(0,0,0,.7);
       transition: transform .4s ease;
     }
-
-    /* 실시간 스트림/미리보기 이미지 공통 스타일 */
     #cctv-image {
       width: 95%;
       max-width: 720px;
       transition: transform .4s ease;
     }
-
     .cctv-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,.7); z-index: 999; }
 
-    /* ====== Buttons ====== */
     .back-button {
       margin-top: 20px; padding: 10px 20px; background-color: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; display: none;
     }
     .back-button:hover { background-color: #333; }
 
-    /* ====== Forms: Add Region / Add Drone ====== */
     .forms h4 { margin: 16px 0 8px; font-size: 16px; }
     .region-row { display: flex; gap: 8px; align-items: center; }
     .region-row input { flex: 1 1 auto; }
@@ -85,12 +73,10 @@
     .btn:hover { background: #333; }
     .error { color: #c62828; font-size: 13px; display: none; width: 100%; }
 
-    /* 좌하단 버튼: Decode 페이지로 이동 */
     .repository { position: fixed; bottom: 20px; left: 20px; background: #676767; color: #fff; padding: 12px 14px; border-radius: 8px; cursor: pointer; z-index: 1000; }
     .repository:hover { background: #171717; }
     #add-drone-btn { width: 100%; box-sizing: border-box; padding: 8px; font-size: 14px; }
 
-    /* 사진 바로 아래 · 목록 위, 가운데 정렬 + 빨강 + 조금 크게 */
     .notice {
       display: none;
       color: #d32f2f;
@@ -98,11 +84,7 @@
       margin: 10px 0 6px;
       text-align: center;
     }
-
-    /* 항상 포함 (inline 로고) */
     .inline-logo { height: 1em; width: auto; vertical-align: -0.12em; margin: 0 6px; }
-
-    /* 확대 상태에서 하단 컨트롤(캡쳐/저장) — 화면 가로 중앙 정렬 */
     .cctv-controls {
       position: fixed;
       z-index: 1001;
@@ -124,7 +106,6 @@
     }
     .cctv-btn:hover { background: #333; }
 
-    /* ====== Region list controls (정렬 버튼) ====== */
     .list-controls {
       display: flex;
       justify-content: flex-end;
@@ -145,25 +126,23 @@
       #cctv-image { width: 100%; max-width: none; }
       .cctv-expanded { max-width: 95%; max-height: 95%; }
     }
-    /* ===== 모바일에서 Add Region을 Add Drone처럼 1열 풀넓이로 ===== */
-@media (max-width: 768px){
-  .forms .region-row{
-    display: grid;              /* flex → grid 로 바꿔서 한 줄씩 쌓이게 */
-    grid-template-columns: 1fr; /* 1열 */
-    gap: 8px;
-  }
-  .forms .region-row input{
-    width: 100%;
-    font-size: 16px;            /* 터치 타겟 키우기 */
-    min-height: 40px;
-  }
-  .forms .region-row button{
-    width: 100%;                /* 버튼도 풀넓이 */
-    padding: 10px 24px;
-    font-size: 16px;
-  }
-}
-
+    @media (max-width: 768px){
+      .forms .region-row{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .forms .region-row input{
+        width: 100%;
+        font-size: 16px;
+        min-height: 40px;
+      }
+      .forms .region-row button{
+        width: 100%;
+        padding: 10px 24px;
+        font-size: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -176,11 +155,8 @@
     </div>
 
     <div class="drone-display" id="drone-display"></div>
-
-    <!-- 사진 바로 아래 / 목록 위 / 가운데 정렬 -->
     <div id="notice" class="notice"></div>
 
-    <!-- ▼ Region 목록 정렬 컨트롤 (오른쪽 끝) -->
     <div class="list-controls" id="sort-controls">
       <button class="sort-btn" data-mode="insert">추가순</button>
       <button class="sort-btn" data-mode="insertDesc">추가역순</button>
@@ -212,22 +188,19 @@
     </div>
   </div>
 
-  <!-- 좌하단 버튼: Decode 페이지로 이동 -->
   <div class="repository" id="decode-btn" role="button" aria-label="Open Encrypt/Decrypt">Decode</div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <script>
-    /* ============================ Config ============================ */
-    const DEFAULT_STREAM_URL = 'http://192.168.137.98:5002/video_feed'; // 환경에 맞게 수정
+    const DEFAULT_STREAM_URL = 'http://192.168.137.98:5002/video_feed';
 
-    /* ============== Data (in-memory) & Map bootstrap ============== */
     const regionData = {
-      Seoul: [
+      '서울': [
         { id: 1, name: 'Drone 1', lat: 37.5665, lng: 126.9780 },
         { id: 2, name: 'Drone 2', lat: 37.5675, lng: 126.9790 }
       ],
-      Busan: [
+      '부산': [
         { id: 3, name: 'Drone 3', lat: 35.1796, lng: 129.0756 }
       ]
     };
@@ -240,7 +213,6 @@
     const map = L.map('map').setView([37.5665, 126.9780], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    // 마커 아이콘
     const blackIcon = L.icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png',
       shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -252,7 +224,6 @@
       iconSize:[25,41], iconAnchor:[12,41], popupAnchor:[1,-34], shadowSize:[41,41]
     });
 
-    /* ============================ ROLE ============================ */
     function getRole(){ return localStorage.getItem('ae_role') === 'admin' ? 'admin' : 'viewer'; }
     function isAdmin(){ return getRole() === 'admin'; }
 
@@ -262,7 +233,6 @@
       document.querySelectorAll('.delete-btn').forEach(btn=>{ btn.style.display = admin ? '' : 'none'; });
     }
 
-    /* ============================ 이름 정규화 & 전역 중복검사 ============================ */
     function normalizeName(s){
       return (s ?? '').toString().normalize('NFKC').toLowerCase().replace(/\s+/g, '');
     }
@@ -279,7 +249,6 @@
       return false;
     }
 
-    /* ============================== Map ============================== */
     function addDroneToMap(drone) {
       const marker = L.marker([drone.lat, drone.lng], { icon: blackIcon }).addTo(map);
       marker.on('click', () => {
@@ -301,7 +270,6 @@
       if (m) m.setIcon(blackIcon);
     }
 
-    /* ============================ Region list ============================ */
     function getRegionList() {
       const names = Object.keys(regionData);
       if (regionSortMode === 'insert') {
@@ -351,7 +319,6 @@
       applyRoleUI();
     }
 
-    /* ============================ Drone list ============================ */
     function renderRegionList(region) {
       const list = document.getElementById('drone-list');
       list.innerHTML = '';
@@ -375,7 +342,6 @@
       applyRoleUI();
     }
 
-    /* ====================== Region / Drone details ====================== */
     function displayRegion(region) {
       currentRegion = region;
       renderRegionList(region);
@@ -389,16 +355,17 @@
     }
 
     function getStreamUrl(drone) {
-      return drone.stream || DEFAULT_STREAM_URL;
+      const base = drone.stream || DEFAULT_STREAM_URL;
+      const sep = base.includes('?') ? '&' : '?';
+      return `${base}${sep}_t=${Date.now()}`;
     }
 
     function displayDroneInfo(drone) {
       const display = document.getElementById('drone-display');
       const streamUrl = getStreamUrl(drone);
 
-      // crossorigin="anonymous" 필수 (서버 CORS 허용 필요)
       display.innerHTML = `
-        <p>${drone.name} <img src="./images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
+        <p>${drone.name} <img src="../images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
         <img src="${streamUrl}" id="cctv-image" alt="Live CCTV Stream" crossorigin="anonymous" />
       `;
 
@@ -420,7 +387,6 @@
       img.onclick = () => toggleCCTVZoom();
     }
 
-    /* ===== 확대/축소 + 확대 시 하단 컨트롤 ===== */
     function toggleCCTVZoom() {
       const img = document.getElementById('cctv-image');
       const overlay = document.querySelector('.cctv-overlay');
@@ -435,16 +401,17 @@
         if (!overlay) {
           const newOverlay = document.createElement('div');
           newOverlay.className = 'cctv-overlay';
-          newOverlay.onclick = toggleCCTVZoom; // 오버레이 클릭으로 닫기
+          newOverlay.onclick = toggleCCTVZoom;
           document.body.appendChild(newOverlay);
         }
         createControlsForImage(img);
-        startRecorderFromImage(img); // 확대 시 즉시 녹화 시작
+        startRecorderFromImage(img);
       }
     }
 
     function createControlsForImage(img) {
       removeControls();
+
       const controls = document.createElement('div');
       controls.id = 'cctv-controls';
       controls.className = 'cctv-controls';
@@ -455,9 +422,26 @@
       controls.addEventListener('click', e => e.stopPropagation());
       controls.addEventListener('mousedown', e => e.stopPropagation());
       document.body.appendChild(controls);
+
       positionControls(img, controls);
+      requestAnimationFrame(() => positionControls(img, controls));
+
       controls._onResize = () => positionControls(img, controls);
       window.addEventListener('resize', controls._onResize);
+      window.addEventListener('scroll', controls._onResize, { passive: true });
+
+      controls._onTransitionEnd = (e) => {
+        if (e.propertyName === 'transform') positionControls(img, controls);
+      };
+      img.addEventListener('transitionend', controls._onTransitionEnd);
+
+      if ('ResizeObserver' in window) {
+        const ro = new ResizeObserver(() => positionControls(img, controls));
+        ro.observe(img);
+        controls._ro = ro;
+      }
+
+      controls._settleTimer = setTimeout(() => positionControls(img, controls), 450);
 
       document.getElementById('btn-capture').onclick = (e)=>{ 
         e.stopPropagation(); 
@@ -470,20 +454,34 @@
     }
 
     function positionControls(img, controls) {
+      if (!img || !controls) return;
       const r = img.getBoundingClientRect();
-      controls.style.top  = (r.bottom + 12) + 'px';
-      controls.style.left = (window.innerWidth / 2) + 'px';
+      controls.style.left = '50%';
+      const top = Math.min(
+        window.innerHeight - (controls.offsetHeight || 0) - 12,
+        r.bottom + 12
+      );
+      controls.style.top = `${Math.max(12, top)}px`;
     }
 
     function removeControls() {
       const controls = document.getElementById('cctv-controls');
-      if (controls) {
-        window.removeEventListener('resize', controls._onResize);
-        controls.remove();
+      if (!controls) return;
+      window.removeEventListener('resize', controls._onResize);
+      window.removeEventListener('scroll', controls._onResize);
+      const img = document.getElementById('cctv-image');
+      if (img && controls._onTransitionEnd) {
+        img.removeEventListener('transitionend', controls._onTransitionEnd);
       }
+      if (controls._ro && controls._ro.disconnect) {
+        controls._ro.disconnect();
+      }
+      if (controls._settleTimer) {
+        clearTimeout(controls._settleTimer);
+      }
+      controls.remove();
     }
 
-    /* ============================== CRUD ============================== */
     function deleteDrone(region, id) {
       if (!isAdmin()) { showNotice('권한이 없습니다. (관리자 전용)'); return; }
       regionData[region] = (regionData[region] || []).filter(d => d.id !== id);
@@ -515,7 +513,6 @@
       document.getElementById('back-button').style.display = 'none';
     }
 
-    /* ============================= Search ============================= */
     function searchDrone() {
       const val = parseInt(document.getElementById('search-bar').value);
       if (isNaN(val)) { alert('Enter a numeric drone id'); return; }
@@ -532,7 +529,6 @@
     }
     function checkEnter(e) { if (e.key === 'Enter') searchDrone(); }
 
-    /* ============================ Helpers ============================ */
     function getNextDroneId() {
       let max = 0;
       for (const region in regionData) {
@@ -608,12 +604,10 @@
       });
     }
 
-    // Decode 버튼 → en&decode.html로 이동 (파일명에 & 있으면 %26으로)
     document.getElementById('decode-btn')?.addEventListener('click', () => {
       window.location.href = 'en%26decode.html';
     });
 
-    // 정렬 버튼 클릭
     document.getElementById('sort-controls').addEventListener('click', (e)=>{
       const btn = e.target.closest('.sort-btn');
       if (!btn) return;
@@ -621,7 +615,6 @@
       renderRegionNames();
     });
 
-    /* ============================ PERSIST ============================ */
     const LS_KEYS = {
       data:  'ae_regionData_v1',
       order: 'ae_regionOrder_v1'
@@ -638,7 +631,6 @@
       try{
         const d = localStorage.getItem(LS_KEYS.data);
         const o = localStorage.getItem(LS_KEYS.order);
-
         if (d){
           const parsed = JSON.parse(d);
           if (parsed && typeof parsed === 'object'){
@@ -653,7 +645,6 @@
       }catch(e){ console.warn('[persist] load failed', e); }
     }
 
-    /* ============================ INIT ============================ */
     window.onload = () => {
       loadAll();
       renderRegionNames();
@@ -661,13 +652,12 @@
         (regionData[region] || []).forEach(drone => addDroneToMap(drone));
       }
       updateRegionDropdown();
-      applyRoleUI();  // 처음 진입 시 역할 반영
+      applyRoleUI();
 
       const _regionNameInput = document.getElementById('region-name');
       if (_regionNameInput) {
         _regionNameInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') { e.preventDefault(); addRegion(); }});
       }
-
       ['add-name','add-lat','add-lng','add-region'].forEach(id=>{
         const el = document.getElementById(id);
         if (!el) return;
@@ -675,11 +665,9 @@
       });
     };
 
-    /* ================== 녹화/캡처 + 암호화(매번 비번 묻기) ================== */
-
-    // --- AES-GCM + PBKDF2 (en&decode.html과 동일 헤더 포맷) ---
-    const MAGIC = new TextEncoder().encode('VIDENC01'); // 8 bytes
-    const ALG_ID = 1;                          // 1 = AES-GCM-256
+    /* ===== Recording / Capture + Encryption ===== */
+    const MAGIC = new TextEncoder().encode('VIDENC01');
+    const ALG_ID = 1;
     const DEFAULT_ITERS = 310000;
 
     function u32(n){ const b=new Uint8Array(4); new DataView(b.buffer).setUint32(0,n,true); return b; }
@@ -722,7 +710,6 @@
       return new Blob([header, ct], { type:'application/octet-stream' });
     }
 
-    // --- 매번 비밀번호 입력 헬퍼 ---
     function askPassword(purposeText){
       const pw = prompt(`${purposeText}에 사용할 비밀번호를 입력하세요\n(en&decode.html에서 복호화 시 동일 비밀번호 필요)`);
       if (!pw) {
@@ -732,117 +719,64 @@
       return pw;
     }
 
-    // --- 전역 녹화 상태 ---
-    const rec = {
-      canvas: null,
-      ctx: null,
-      stream: null,
-      recorder: null,
-      chunks: [],
-      rafId: null
-    };
+    const rec = { canvas:null, ctx:null, stream:null, recorder:null, chunks:[], rafId:null };
 
     function supportsMime(m){
       return typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m);
     }
 
-    // 이미지 → 캔버스 → captureStream → MediaRecorder로 누적
     function startRecorderFromImage(img){
-      stopRecorder(); // 안전 차단
-
-      // 이미지가 로드되었는지 확인
+      stopRecorder();
       if(!img || !img.complete || img.naturalWidth === 0){
         showNotice('이미지 로딩 중입니다. 잠시 후 다시 시도하세요.');
         return;
       }
-
-      // 캔버스 준비(원본 해상도 기준)
-      const cw = img.naturalWidth;
-      const ch = img.naturalHeight;
+      const cw = img.naturalWidth, ch = img.naturalHeight;
       const canvas = document.createElement('canvas');
       canvas.width = cw; canvas.height = ch;
       const ctx = canvas.getContext('2d', { willReadFrequently:true });
 
-      // draw loop
       function draw(){
-        try{
-          ctx.drawImage(img, 0, 0, cw, ch);
-        }catch(e){
-          // CORS 실패 시 drawImage에서 SecurityError 발생
-          console.error('drawImage error (CORS?)', e);
-          showNotice('CORS 문제로 녹화/캡처가 제한됩니다. 서버에 Access-Control-Allow-Origin 헤더를 설정하세요.');
-          stopRecorder();
-          return;
-        }
+        try{ ctx.drawImage(img, 0, 0, cw, ch); }
+        catch(e){ console.error('drawImage error (CORS?)', e); showNotice('CORS 문제로 녹화/캡처가 제한됩니다. 서버에 Access-Control-Allow-Origin 헤더를 설정하세요.'); stopRecorder(); return; }
         rec.rafId = requestAnimationFrame(draw);
       }
-      rec.canvas = canvas;
-      rec.ctx = ctx;
-
-      // 캡처 프레임레이트
-      const stream = canvas.captureStream(30); // 30fps
-      rec.stream = stream;
-
-      // 코덱 선택
-      let mime = 'video/webm;codecs=vp9';
-      if (!supportsMime(mime)) mime = 'video/webm;codecs=vp8';
-      if (!supportsMime(mime)) mime = 'video/webm';
-
+      rec.canvas = canvas; rec.ctx = ctx;
+      const stream = canvas.captureStream(30); rec.stream = stream;
+      let mime = 'video/webm;codecs=vp9'; if (!supportsMime(mime)) mime = 'video/webm;codecs=vp8'; if (!supportsMime(mime)) mime = 'video/webm';
       try{
         const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 4_000_000 });
         recorder.ondataavailable = (e)=>{ if(e.data && e.data.size>0) rec.chunks.push(e.data); };
-        recorder.start(1000); // 1초마다 청크
-        rec.recorder = recorder;
-        draw();
-      }catch(e){
-        console.error('MediaRecorder 시작 실패', e);
-        showNotice('브라우저가 MediaRecorder를 지원하지 않거나 권한 문제가 있습니다.');
-        stopRecorder();
-      }
+        recorder.start(1000); rec.recorder = recorder; draw();
+      }catch(e){ console.error('MediaRecorder 시작 실패', e); showNotice('브라우저가 MediaRecorder를 지원하지 않거나 권한 문제가 있습니다.'); stopRecorder(); }
     }
 
     function stopRecorder(){
       try{
         if(rec.rafId){ cancelAnimationFrame(rec.rafId); rec.rafId = null; }
-        if(rec.recorder && rec.recorder.state !== 'inactive'){
-          rec.recorder.stop();
-        }
-        if(rec.stream){
-          rec.stream.getTracks().forEach(t=>t.stop());
-        }
-      }catch(e){ /* noop */ }
-      rec.recorder = null;
-      rec.stream = null;
-      rec.canvas = null;
-      rec.ctx = null;
+        if(rec.recorder && rec.recorder.state !== 'inactive'){ rec.recorder.stop(); }
+        if(rec.stream){ rec.stream.getTracks().forEach(t=>t.stop()); }
+      }catch(e){}
+      rec.recorder = null; rec.stream = null; rec.canvas = null; rec.ctx = null;
     }
 
-    // --- 캡처: 현재 프레임 PNG → .venc 저장 (매번 비번) ---
     async function captureCurrentFrameEncrypted(){
       try{
         const img = document.getElementById('cctv-image');
         if(!img){ showNotice('이미지가 없습니다.'); return; }
-        if(!img.complete || img.naturalWidth === 0){
-          showNotice('프레임 로딩 중입니다. 잠시 후 다시 시도하세요.'); return;
-        }
+        if(!img.complete || img.naturalWidth === 0){ showNotice('프레임 로딩 중입니다. 잠시 후 다시 시도하세요.'); return; }
 
         const canvas = document.createElement('canvas');
         canvas.width  = img.naturalWidth;
         canvas.height = img.naturalHeight;
         const ctx = canvas.getContext('2d', { willReadFrequently:true });
-        try{
-          ctx.drawImage(img, 0, 0);
-        }catch(e){
-          console.error('drawImage error (CORS?)', e);
-          showNotice('CORS 문제로 캡처가 제한됩니다. 서버에 CORS 헤더를 설정하세요.');
-          return;
-        }
+        try{ ctx.drawImage(img, 0, 0); }
+        catch(e){ console.error('drawImage error (CORS?)', e); showNotice('CORS 문제로 캡처가 제한됩니다. 서버에 CORS 헤더를 설정하세요.'); return; }
 
         const pngBlob = await new Promise((resolve)=> canvas.toBlob(resolve, 'image/png', 0.92));
         if(!pngBlob){ showNotice('캡처 실패(캔버스)'); return; }
 
         const pw = askPassword('캡처 파일 암호화');
-
         const ts = new Date().toISOString().replace(/[:.]/g,'-');
         const baseName = `capture_${ts}.png`;
         const vencBlob = await encryptBlobToVenc(pngBlob, baseName, pw);
@@ -855,24 +789,16 @@
         setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
         showNotice('캡처 저장 완료(암호화).');
       }catch(err){
-        if (err?.message !== 'password_cancelled') {
-          console.error(err);
-          showNotice('캡처 오류: ' + (err?.message || String(err)));
-        }
+        if (err?.message !== 'password_cancelled') { console.error(err); showNotice('캡처 오류: ' + (err?.message || String(err))); }
       }
     }
 
-    // --- 지금까지 녹화 저장: WebM → .venc (매번 비번) ---
     async function saveRecordingEncrypted(){
       try{
         if (!rec) { showNotice('녹화 상태가 없습니다.'); return; }
-
-        // 녹화가 진행 중이면 stop → onstop 이후 blob 만들기
         await new Promise(resolve=>{
-          if (rec.recorder && rec.recorder.state !== 'inactive') {
-            rec.recorder.onstop = resolve;
-            try { rec.recorder.stop(); } catch(e){ resolve(); }
-          } else { resolve(); }
+          if (rec.recorder && rec.recorder.state !== 'inactive') { rec.recorder.onstop = resolve; try { rec.recorder.stop(); } catch(e){ resolve(); } }
+          else { resolve(); }
         });
 
         const blob = new Blob(rec.chunks.slice(), { type:'video/webm' });
@@ -880,14 +806,12 @@
 
         if (!blob || blob.size === 0) {
           showNotice('저장할 녹화 데이터가 없습니다.');
-          // 재시작 시도
           const img = document.getElementById('cctv-image');
           if (img) startRecorderFromImage(img);
           return;
         }
 
         const pw = askPassword('녹화 파일 암호화');
-
         const ts = new Date().toISOString().replace(/[:.]/g,'-');
         const baseName = `record_${ts}.webm`;
         const vencBlob = await encryptBlobToVenc(blob, baseName, pw);
@@ -900,17 +824,110 @@
         setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
         showNotice('녹화 저장 완료(암호화).');
 
-        // 사용자 편의: 즉시 다시 녹화 재시작
         const img = document.getElementById('cctv-image');
         if (img) startRecorderFromImage(img);
       }catch(err){
-        if (err?.message !== 'password_cancelled') {
-          console.error(err);
-          showNotice('녹화 저장 오류: ' + (err?.message || String(err)));
-        }
+        if (err?.message !== 'password_cancelled') { console.error(err); showNotice('녹화 저장 오류: ' + (err?.message || String(err))); }
       }
+    }
+
+    /* ===== Reverse Geocoding (global) ===== */
+    const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/reverse';
+    const USER_AGENT_CONTACT = 'DroneCCTVViewer/1.0 (your-email@example.com)'; // 변경 권장
+
+    const _revCache = new Map();
+    function _cacheKey(lat, lng) {
+      const kLat = (Math.round(lat * 20000) / 20000).toFixed(5);
+      const kLng = (Math.round(lng * 20000) / 20000).toFixed(5);
+      return `${kLat},${kLng}`;
+    }
+
+    async function getRegionNameFromCoords(lat, lng) {
+      const key = _cacheKey(lat, lng);
+      if (_revCache.has(key)) return _revCache.get(key);
+
+      const url = `${NOMINATIM_BASE}?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}&zoom=10&accept-language=ko`;
+      let region = null;
+      try {
+        const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT_CONTACT } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const addr = data.address || {};
+
+        const cityLike = addr.city || addr.municipality || addr.town || addr.city_district || addr.county || addr.region;
+        const stateLike = addr.state || addr.province;
+        region = normalizeKoreanRegion(cityLike || stateLike || null);
+      } catch (e) {
+        console.warn('Reverse geocode failed:', e);
+      }
+      _revCache.set(key, region);
+      return region;
+    }
+
+    function normalizeKoreanRegion(name) {
+      if (!name || typeof name !== 'string') return null;
+      let s = name.trim();
+
+      s = s.replace(/특별시$/,'')
+           .replace(/광역시$/,'')
+           .replace(/특별자치시$/,'')
+           .replace(/특별자치도$/,'')
+           .replace(/자치시$/,'')
+           .replace(/자치도$/,'')
+           .replace(/도$/,'')
+           .replace(/시$/,'')
+           .replace(/군$/,'')
+           .replace(/구$/,'');
+
+      const map = { '서울':'서울','부산':'부산','대전':'대전','대구':'대구','광주':'광주','인천':'인천','울산':'울산','세종':'세종','제주':'제주' };
+      if (map[s]) return map[s];
+      return s || name;
+    }
+
+    // ======= Map coordinate pick handler (desktop: right-click, mobile: tap) =======
+    async function handleMapCoordinatePick(e) {
+      const { lat, lng } = e.latlng;
+      const latInp = document.getElementById('add-lat');
+      const lngInp = document.getElementById('add-lng');
+      const nameInp = document.getElementById('add-name');
+      const regionSel = document.getElementById('add-region');
+
+      if (latInp) latInp.value = lat.toFixed(6);
+      if (lngInp) lngInp.value = lng.toFixed(6);
+
+      if (nameInp && !nameInp.value.trim()) {
+        nameInp.value = `Drone ${getNextDroneId()}`;
+      }
+
+      if (regionSel && currentRegion && [...regionSel.options].some(o => o.value === currentRegion)) {
+        regionSel.value = currentRegion;
+      }
+
+      const inferred = await getRegionNameFromCoords(lat, lng);
+
+      if (inferred) {
+        const hasRegion = Object.keys(regionData).some(r => r === inferred);
+        if (!hasRegion) {
+          alert(`${inferred} 지역을 먼저 추가해주세요.`);
+          showNotice(`${inferred} 지역을 먼저 추가해주세요.`);
+        } else {
+          if (regionSel && regionSel.value && regionSel.value !== inferred) {
+            alert(`현재 좌표와 지역의 좌표가 다릅니다. (추천: ${inferred})`);
+          } else if (regionSel && !regionSel.value) {
+            regionSel.value = inferred;
+          }
+        }
+      } else {
+        showNotice(`좌표 입력됨: ${lat.toFixed(6)}, ${lng.toFixed(6)} (지도 선택)`);
+      }
+    }
+
+    // Bind for desktop (right-click) and mobile (tap/click)
+    map.on('contextmenu', handleMapCoordinatePick);
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouch) {
+      map.on('click', handleMapCoordinatePick);
     }
   </script>
 </body>
 </html>
-
