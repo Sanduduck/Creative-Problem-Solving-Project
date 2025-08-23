@@ -484,7 +484,7 @@
           msg.classList.add('msg-ok');
           msg.textContent = '계정이 생성되었습니다. 이동 중...';
           msg.style.display='block';
-          window.location.href = 'cctv.html';
+          window.location.href = 'info.html';
         }catch(err){
           console.error(err);
           msg.textContent = '이 브라우저는 보안 기능(WebCrypto)을 지원하지 않습니다.'; msg.style.display='block';
@@ -512,7 +512,7 @@
           localStorage.setItem('ae_role','admin');
           localStorage.setItem('ae_user', id);
           err.style.display = 'none';
-          window.location.href = 'cctv.html';
+          window.location.href = 'info.html';
           return;
         }
   
@@ -542,7 +542,7 @@
           localStorage.setItem('ae_role', u.role || 'viewer');
           localStorage.setItem('ae_user', u.email);
           err.style.display = 'none';
-          window.location.href = 'cctv.html';
+          window.location.href = 'info.html';
         }catch(err2){
           console.error(err2);
           err.textContent = '이 브라우저는 보안 기능(WebCrypto)을 지원하지 않습니다.'; err.style.display='block';
