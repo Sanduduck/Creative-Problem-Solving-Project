@@ -827,7 +827,17 @@ h1.brand {
     line-height: 1.1;
   }
 }
+/* Animated section states */
+section.animated {
+  opacity: 0;
+  transform: translateY(100px); /* 50px에서 100px로 변경하여 더 아래에서 시작 */
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+section.animated.visible {
+  opacity: 1;
+  transform: translateY(0); /* 원래 위치로 올라오기 */
+}
 
     </style>
 </head>
@@ -1117,7 +1127,44 @@ if (menuBtn && navEl) {
     if (window.innerWidth > 768) closeNav();
   });
 }
+// Function to check if an element is in the viewport
+// Function to check if an element is in the viewport
+function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+    
+    // 요소가 화면의 30% 이상 보일 때
+    const triggerPoint = windowHeight * 0.7; // 화면 높이의 70% 지점
+    return (
+        rect.top <= triggerPoint && rect.bottom >= 0
+    );
+}
 
+// Function to handle the scroll animation
+function handleScrollAnimation() {
+    const sections = document.querySelectorAll('#about, #features, #portfolio, #contact');
+    sections.forEach(section => {
+        if (isElementInViewport(section)) {
+            section.classList.add('visible');
+        } else {
+            // 화면 밖으로 나가면 다시 초기 상태로 (선택 사항)
+            // section.classList.remove('visible'); 
+        }
+    });
+}
+
+// Add the initial animation class to all sections you want to animate
+document.addEventListener("DOMContentLoaded", () => {
+    const sectionsToAnimate = document.querySelectorAll('#about, #features, #portfolio, #contact');
+    sectionsToAnimate.forEach(section => {
+        section.classList.add('animated');
+    });
+    // Run the check on page load to animate any sections already in view
+    handleScrollAnimation();
+});
+
+// Listen for the scroll event to trigger the animation
+window.addEventListener('scroll', handleScrollAnimation);
                 </script>
 </body>
 </html>
