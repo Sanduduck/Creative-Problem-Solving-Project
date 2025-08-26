@@ -150,7 +150,7 @@
 
   <div class="right-panel">
     <div class="search-container">
-      <input type="text" class="search-bar" id="search-bar" placeholder="Enter drone number (1-30)" onkeydown="checkEnter(event)" />
+      <input type="text" class="search-bar" id="search-bar" placeholder="Enter drone number or name" onkeydown="checkEnter(event)" />
       <button class="search-icon" onclick="searchDrone()" title="Search by ID">&#8594;</button>
     </div>
 
@@ -190,20 +190,12 @@
 
   <div class="repository" id="decode-btn" role="button" aria-label="Open Encrypt/Decrypt">Decode</div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <script>
+<script>
     const DEFAULT_STREAM_URL = 'http://192.168.137.98:5002/video_feed';
 
-    const regionData = {
-      '서울': [
-        { id: 1, name: 'Drone 1', lat: 37.5665, lng: 126.9780 },
-        { id: 2, name: 'Drone 2', lat: 37.5675, lng: 126.9790 }
-      ],
-      '부산': [
-        { id: 3, name: 'Drone 3', lat: 35.1796, lng: 129.0756 }
-      ]
-    };
+    const regionData = {};
 
     let regionOrder = Object.keys(regionData);
     let regionSortMode = 'insert';
@@ -342,6 +334,7 @@
       applyRoleUI();
     }
 
+    // displayRegion 함수를 수정했습니다.
     function displayRegion(region) {
       currentRegion = region;
       renderRegionList(region);
@@ -514,19 +507,41 @@
     }
 
     function searchDrone() {
-      const val = parseInt(document.getElementById('search-bar').value);
-      if (isNaN(val)) { alert('Enter a numeric drone id'); return; }
-      for (const region in regionData) {
-        const found = (regionData[region] || []).find(d => d.id === val);
-        if (found) {
-          displayDroneInfo(found);
-          map.setView([found.lat, found.lng], 18);
-          document.getElementById('back-button').style.display = 'block';
-          return;
+      const input = document.getElementById('search-bar').value.trim();
+      if (!input) {
+        alert('Please enter a drone ID or name.');
+        return;
+      }
+
+      const numericId = parseInt(input);
+      let found = null;
+
+      // Case 1: Search by ID if the input is a valid number
+      if (!isNaN(numericId)) {
+        for (const region in regionData) {
+          found = (regionData[region] || []).find(d => d.id === numericId);
+          if (found) break;
         }
       }
-      alert('Not found');
+
+      // Case 2: If no drone was found by ID, try searching by name
+      if (!found) {
+        const normalizedInput = normalizeName(input);
+        for (const region in regionData) {
+          found = (regionData[region] || []).find(d => normalizeName(d.name) === normalizedInput);
+          if (found) break;
+        }
+      }
+
+      if (found) {
+        displayDroneInfo(found);
+        map.setView([found.lat, found.lng], 18);
+        document.getElementById('back-button').style.display = 'block';
+      } else {
+        alert('Not found');
+      }
     }
+    
     function checkEnter(e) { if (e.key === 'Enter') searchDrone(); }
 
     function getNextDroneId() {
@@ -541,6 +556,7 @@
       const el = document.getElementById('notice');
       el.textContent = msg;
       el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 3000);
     }
 
     function addDrone() {
@@ -833,7 +849,7 @@
 
     /* ===== Reverse Geocoding (global) ===== */
     const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/reverse';
-    const USER_AGENT_CONTACT = 'DroneCCTVViewer/1.0 (your-email@example.com)'; // 변경 권장
+    const USER_AGENT_CONTACT = 'DroneCCTVViewer/1.0 (your-email@example.com)';
 
     const _revCache = new Map();
     function _cacheKey(lat, lng) {
@@ -928,6 +944,6 @@
     if (isTouch) {
       map.on('click', handleMapCoordinatePick);
     }
-  </script>
+</script>
 </body>
 </html>
