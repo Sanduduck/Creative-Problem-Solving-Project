@@ -65,6 +65,23 @@
       pointer-events: none; z-index: 9999;
     }
     .copy-toast.show { opacity: 1; transform: translateY(0); }
+    .back-login-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #000;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 1000;
+  border: none;
+}
+.back-login-btn:hover {
+  background: #333;
+}
+
   </style>
 </head>
 <body>
@@ -145,6 +162,7 @@
 
   <!-- 복사 안내 토스트 -->
   <div id="copyToast" class="copy-toast">복사되었습니다!</div>
+<button class="back-login-btn" onclick="window.location.href='cctv.html'">Go to CCTV</button>
 
   <script>
  // ---------- Helpers ----------
