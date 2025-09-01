@@ -482,9 +482,11 @@
   
           msg.classList.remove('msg-error');
           msg.classList.add('msg-ok');
-          msg.textContent = '계정이 생성되었습니다. 이동 중...';
+          msg.textContent = '계정이 생성되었습니다. 로그인 화면으로 이동하세요.';
           msg.style.display='block';
-          window.location.href = 'info.html';
+          setTimeout(()=>{
+            let_change(); // signup ↔ login 폼을 바꾸는 함수 (이미 코드에 있음)
+          }, 1000);
         }catch(err){
           console.error(err);
           msg.textContent = '이 브라우저는 보안 기능(WebCrypto)을 지원하지 않습니다.'; msg.style.display='block';

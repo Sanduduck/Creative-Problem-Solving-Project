@@ -143,6 +143,23 @@
         font-size: 16px;
       }
     }
+    .back-login-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #000;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 1000;
+  border: none;
+}
+.back-login-btn:hover {
+  background: #333;
+}
+
   </style>
 </head>
 <body>
@@ -189,6 +206,7 @@
   </div>
 
   <div class="repository" id="decode-btn" role="button" aria-label="Open Encrypt/Decrypt">Decode</div>
+<button class="back-login-btn" onclick="window.location.href='main.html'">Go to Main</button>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -358,7 +376,7 @@
       const streamUrl = getStreamUrl(drone);
 
       display.innerHTML = `
-        <p>${drone.name} <img src="../images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
+        <p>${drone.name} <img src="./images/logo2.png" alt="logo" class="inline-logo" /> (${drone.lat}, ${drone.lng})</p>
         <img src="${streamUrl}" id="cctv-image" alt="Live CCTV Stream" crossorigin="anonymous" />
       `;
 
