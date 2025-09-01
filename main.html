@@ -9,6 +9,8 @@
     <style>
         /* everything */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 /* 항상 글꼴은 최상단 */
 *{
     margin: 0;
@@ -196,7 +198,7 @@ main{
     height: 100vh;
     /* 화면에 맞춰서 퍼센트 단위로 화면 비율을 바꿔줌 ex)줄이면 퍼센트 단위로 줄어듦 100 -> 10 이라면 10 -> 1이 됨 */
     color: white;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./images/me.jpg') center center;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./images/me.png') center center;
     background-size: cover;
     /* 항상 가운데에 두기 */
     display: flex;
@@ -837,6 +839,17 @@ section.animated {
 section.animated.visible {
   opacity: 1;
   transform: translateY(0); /* 원래 위치로 올라오기 */
+}
+/* === Hero 타이핑 문구(span) 전용 폰트 === */
+main h2 span{
+  font-family: 'Roboto Condensed', -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-style: italic;          /* 살짝 눕힘 */
+  letter-spacing: 0.2px;       /* 간격 좁게 */
+  font-weight: 700;            /* 굵게 선명하게 */
+  display: inline-block;       /* 렌더링 안정 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
     </style>
