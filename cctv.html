@@ -236,6 +236,38 @@
     @media (min-width: 769px){
       .mobile-toggle, .panel-overlay{ display: none !important; }
     }
+    /* 모바일에서 토글 버튼이 패널/오버레이보다 항상 위 */
+@media (max-width: 768px){
+  .right-panel{ z-index: 1002; }     /* 패널 */
+  .panel-overlay{ z-index: 1001; }   /* 반투명 오버레이 */
+  .mobile-toggle{
+    z-index: 10050 !important;       /* ✅ 버튼 최상단 */
+    pointer-events: auto;            /* 오버레이 위에서도 클릭 가능 */
+  }
+}
+/* 모바일에서 상단 좌/우로 이동 */
+@media (max-width: 768px){
+  .repository{
+    top: 12px;
+    bottom: auto;
+    left: 12px;
+    right: auto;
+    z-index: 10040;                 /* 패널 위에 오도록 높여줌 */
+  }
+  .back-login-btn{
+    top: 12px;
+    bottom: auto;
+    right: 12px;
+    left: auto;
+    z-index: 10040;                 /* 패널 위에 오도록 높여줌 */
+  }
+}
+@media (max-width: 768px){
+  .mobile-toggle{
+    bottom: 22px;                     /* 기본 14px → 22px로 살짝 위 */
+  }
+}
+
   </style>
 </head>
 <body>
