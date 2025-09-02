@@ -374,19 +374,29 @@
     justify-content: center;
   }
 }
-/* 모바일 패널 사이즈 조정 */
 @media (max-width: 768px) {
+  body {
+    flex-direction: column; /* 세로 배치로 전환 */
+  }
+
+  #map {
+    flex: none;
+    width: 100%;
+    height: 100%; /* 지도가 기본 전체 */
+  }
+
   .right-panel {
     position: fixed;
     bottom: -100%;
     left: 0;
-    width: 100%;
-    height: 85%;   /* 전체 화면의 85%까지만 차지 */
-    max-height: 85%;
+    width: 100%;        /* 👉 모바일에서는 전체 너비 차지 */
+    max-width: 100%;    /* 👉 오른쪽으로 삐져나가지 않게 */
+    height: 85%;        /* 높이는 조정 가능 */
     transition: bottom 0.4s ease;
     border-top-left-radius: 14px;
     border-top-right-radius: 14px;
     box-shadow: 0 -4px 20px rgba(0,0,0,.25);
+    z-index: 1000;
   }
 
   .right-panel.show {
