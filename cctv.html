@@ -317,6 +317,63 @@
 @media (min-width: 769px){
   .mobile-toggle, .panel-overlay{ display: none !important; }
 }
+/* === FAB 버튼 항상 맨 위 === */
+.fab{
+  position: fixed;
+  top: 12px;
+  z-index: 11000;
+  background: #000; color:#fff;
+  border: none; border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.24);
+}
+.fab-left { left: 12px; }
+.fab-right{ right: 12px; }
+.fab:hover { background:#333; }
+
+/* === 모바일 바텀시트 스와이프 전용 === */
+@media (max-width: 768px){
+  body{
+    display:block; height:100svh; overflow:hidden;
+  }
+  #map{
+    position:fixed; inset:0; z-index:0;
+  }
+  .right-panel{
+    position:fixed; left:0; right:0; bottom:0;
+    width:100%; max-height:85svh;
+    background:#f7f7f7;
+    transform:translateY(calc(100% - 50px));
+    transition:transform .25s ease;
+    border-top-left-radius:14px; border-top-right-radius:14px;
+    box-shadow:0 -6px 20px rgba(0,0,0,.2);
+    z-index:10020;
+    overflow-y:auto;
+  }
+  .right-panel.open{ transform:translateY(0); }
+  .right-panel::before{
+    content:"";
+    position:absolute; top:8px; left:50%;
+    width:40px; height:4px;
+    transform:translateX(-50%);
+    border-radius:999px;
+    background:#aaa;
+  }
+}
+/* 기본적으로 숨김 */
+.fab {
+  display: none;
+}
+
+/* 모바일(768px 이하)에서는 표시 */
+@media (max-width: 768px) {
+  .fab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 
   </style>
 </head>
@@ -1128,126 +1185,55 @@
       map.on('click', handleMapCoordinatePick);
     }
     (function(){
-    const panel = document.getElementById('right-panel');
-    const toggleBtn = document.getElementById('mobile-toggle');
-    const overlay = document.getElementById('panel-overlay');
+  const panel = document.getElementById('right-panel');
+  if(!panel) return;
 
-    if(!panel || !toggleBtn || !overlay) return;
+  // FAB 버튼 이동
+  document.getElementById('fab-decode')?.addEventListener('click', ()=>{
+    window.location.href = 'en&decode.html';
+  });
+  document.getElementById('fab-main')?.addEventListener('click', ()=>{
+    window.location.href = 'main.html';
+  });
 
-    function isMobile(){ return window.matchMedia('(max-width: 768px)').matches; }
+  // === 모바일 스와이프 제스처 ===
+  let startY=null, currentY=null, isDragging=false;
 
-    function openPanel(){
-      if(!isMobile()) return;
-      panel.classList.add('open');
-      overlay.hidden = false;
-      requestAnimationFrame(()=> overlay.classList.add('show'));
-      toggleBtn.setAttribute('aria-expanded','true');
-      toggleBtn.querySelector('.icon').textContent = '▼';
-      toggleBtn.querySelector('.label').textContent = '메뉴 닫기';
-      // 포커스 트랩까지는 과하지만, 첫 입력으로 포커스 이동은 UX 좋음
-      const firstInput = panel.querySelector('input,select,button');
-      if(firstInput){ firstInput.focus({preventScroll:true}); }
-    }
-
-    function closePanel(){
-      panel.classList.remove('open');
-      overlay.classList.remove('show');
-      toggleBtn.setAttribute('aria-expanded','false');
-      toggleBtn.querySelector('.icon').textContent = '▲';
-      toggleBtn.querySelector('.label').textContent = '메뉴 열기';
-      setTimeout(()=> overlay.hidden = true, 200);
-    }
-
-    function togglePanel(){
-      if(panel.classList.contains('open')) closePanel(); else openPanel();
-    }
-
-    // 버튼/오버레이 이벤트
-    toggleBtn.addEventListener('click', togglePanel);
-    overlay.addEventListener('click', closePanel);
-
-    // ESC 키로 닫기
-    window.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape' && panel.classList.contains('open')) closePanel();
-    });
-
-    // 데스크탑 전환 시 항상 닫아두기
-    window.addEventListener('resize', ()=>{
-      if(!isMobile()){ closePanel(); }
-    });
-
-    // 선택 사항: 아래로 스와이프 제스처(간단)
-    let startY = null;
-    panel.addEventListener('touchstart', (e)=>{ startY = e.touches?.[0]?.clientY ?? null; }, {passive:true});
-    panel.addEventListener('touchmove', (e)=>{
-      if(startY==null) return;
-      const dy = (e.touches?.[0]?.clientY ?? 0) - startY;
-      // 아래로 40px 이상 끌면 닫기
-      if(dy > 40){ closePanel(); startY = null; }
-    }, {passive:true});
-  })();
-  (function(){
-  const panel   = document.getElementById('right-panel');
-  const toggle  = document.getElementById('mobile-toggle');
-  const overlay = document.getElementById('panel-overlay');
-
-  const fabDecode = document.getElementById('fab-decode');
-  const fabMain   = document.getElementById('fab-main');
-
-  // FAB 동작: 기존 기능과 동일하게 라우팅
-  fabDecode?.addEventListener('click', ()=> { window.location.href = 'en%26decode.html'; });
-  fabMain  ?.addEventListener('click', ()=> { window.location.href = 'main.html'; });
-
-  if(!panel || !toggle || !overlay) return;
-
-  const isMobile = ()=> window.matchMedia('(max-width: 768px)').matches;
-
-  function openPanel(){
-    if(!isMobile()) return;
-    panel.classList.add('open');
-    overlay.hidden = false;
-    requestAnimationFrame(()=> overlay.classList.add('show'));
-    toggle.setAttribute('aria-expanded','true');
-    toggle.querySelector('.icon').textContent = '▼';
-    toggle.querySelector('.label').textContent = '메뉴 닫기';
-    // 첫 입력 포커스
-    const first = panel.querySelector('input,select,button');
-    first?.focus({preventScroll:true});
-  }
-  function closePanel(){
-    panel.classList.remove('open');
-    overlay.classList.remove('show');
-    toggle.setAttribute('aria-expanded','false');
-    toggle.querySelector('.icon').textContent = '▲';
-    toggle.querySelector('.label').textContent = '메뉴 열기';
-    setTimeout(()=> overlay.hidden = true, 180);
-  }
-  function togglePanel(){
-    panel.classList.contains('open') ? closePanel() : openPanel();
-  }
-
-  toggle.addEventListener('click', togglePanel);
-  overlay.addEventListener('click', closePanel);
-  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && panel.classList.contains('open')) closePanel(); });
-
-  // 뷰포트 전환 시 상태 정리
-  window.addEventListener('resize', ()=>{ if(!isMobile()){ closePanel(); } });
-
-  // UX: 패널 내에서 아래로 스와이프하면 닫기
-  let startY=null;
-  panel.addEventListener('touchstart', e=>{ startY = e.touches?.[0]?.clientY ?? null; }, {passive:true});
-  panel.addEventListener('touchmove',  e=>{
-    if(startY==null) return;
-    const dy = (e.touches?.[0]?.clientY ?? 0) - startY;
-    if(dy > 40){ closePanel(); startY=null; }
+  panel.addEventListener('touchstart', e=>{
+    if(e.touches.length!==1) return;
+    startY = e.touches[0].clientY;
+    currentY = startY;
+    isDragging = true;
+    panel.style.transition = 'none';  // 드래그 시 즉시 반응
   }, {passive:true});
 
-  // 검색창/정렬버튼 등 클릭 시 자동 열기 (검색만 보이는 문제 회피)
-  const autoOpenTargets = ['#search-bar', '#sort-controls', '#add-region-btn', '#add-drone-btn', '#add-name', '#add-lat', '#add-lng', '#add-region'];
-  autoOpenTargets.forEach(sel=>{
-    const el = document.querySelector(sel);
-    el?.addEventListener('focus', ()=>{ if(isMobile()) openPanel(); }, true);
-    el?.addEventListener('click', ()=>{ if(isMobile()) openPanel(); }, true);
+  panel.addEventListener('touchmove', e=>{
+    if(!isDragging) return;
+    currentY = e.touches[0].clientY;
+    const dy = currentY - startY;
+    if(dy>0 && !panel.classList.contains('open')){ // 아래에서 위로 올릴 때
+      panel.style.transform = `translateY(calc(100% - 50px - ${Math.min(dy, window.innerHeight*0.7)}px))`;
+    }else if(dy<0 && panel.classList.contains('open')){ // 위에서 아래로 내릴 때
+      panel.style.transform = `translateY(${Math.min(Math.abs(dy), window.innerHeight*0.7)}px)`;
+    }
+  }, {passive:true});
+
+  panel.addEventListener('touchend', ()=>{
+    if(!isDragging) return;
+    isDragging=false;
+    panel.style.transition = 'transform .25s ease';
+
+    if(!panel.classList.contains('open')){
+      // 아래에서 위로 스와이프 → 일정 이상 올리면 열기
+      const moved = startY - currentY;
+      if(moved>60){ panel.classList.add('open'); }
+      else { panel.style.transform = 'translateY(calc(100% - 50px))'; }
+    }else{
+      // 위에서 아래로 스와이프 → 일정 이상 내리면 닫기
+      const moved = currentY - startY;
+      if(moved>60){ panel.classList.remove('open'); }
+      else { panel.style.transform = 'translateY(0)'; }
+    }
   });
 })();
 </script>
