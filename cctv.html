@@ -230,13 +230,100 @@
 @media (min-width: 769px){
   .mobile-toggle, .panel-overlay{ display: none !important; }
 }
+/* ===== Mobile bottom sheet fix & FABs ===== */
+@media (max-width: 768px){
+  /* 1) 레이아웃 정리: 바텀시트/지도 겹침 문제 방지 */
+  body{
+    display:block !important;     /* 기존 flex → 모바일에선 block */
+    height:100svh;                /* 모바일 주소창 변동 대응 */
+    overflow:hidden;              /* 시트 열릴 때 배경 스크롤 방지 */
+  }
+  #map{
+    position:fixed;
+    inset:0;                      /* 화면 전체에 지도 고정 */
+    z-index:0 !important;
+  }
+
+  /* 2) 바텀시트: 기본은 핸들만 보이게 숨김 */
+  .right-panel{
+    position: fixed !important;
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    max-height: 85svh;            /* 패널 최대 높이 */
+    height: auto;
+    transform: translateY(calc(100% - 56px));   /* 핸들 바만 보이게 */
+    transition: transform .28s ease-out;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.18);
+    z-index: 10020;               /* 지도/오버레이보다 위 */
+    padding-top: 18px;            /* 핸들 여백 */
+    background: #f7f7f7;          /* 패널 배경 재확인 */
+    overflow-y: auto;             /* 패널 내부 스크롤 */
+  }
+  .right-panel.open{ transform: translateY(0); }
+
+  /* 핸들바 */
+  .right-panel::before{
+    content:"";
+    position:absolute; top:8px; left:50%;
+    width: 42px; height: 4px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background:#c9c9c9;
+  }
+
+  /* 3) 오버레이 */
+  .panel-overlay{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 10010;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .panel-overlay.show{ opacity: 1; pointer-events: auto; }
+
+  /* 4) 열기/닫기 토글 버튼 (작은 둥근 버튼) */
+  .mobile-toggle{
+    position: fixed;
+    right: 14px; bottom: 14px;
+    z-index: 10030;               /* 최상단 */
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 12px;
+    border: none; border-radius: 999px;
+    background: #000; color:#fff; cursor:pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,.2);
+    font-size: 14px; font-weight: 700;
+  }
+  .mobile-toggle .icon{ font-size: 14px; line-height: 1; }
+  .mobile-toggle:active{ transform: translateY(1px); }
+}
+
+/* 5) 상단 고정 FAB (Decode/Main) — 항상 맨 앞에 노출 */
+.fab{
+  position: fixed;
+  top: 12px;
+  z-index: 11000;                /* 모든 요소 위 */
+  background: #000; color:#fff;
+  border: none; border-radius: 999px;
+  padding: 10px 14px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.24);
+}
+.fab-left { left: 12px; }
+.fab-right{ right: 12px; }
+.fab:hover { background:#333; }
+
+/* 데스크탑에서는 모바일 토글/오버레이만 숨김 */
+@media (min-width: 769px){
+  .mobile-toggle, .panel-overlay{ display: none !important; }
+}
 
   </style>
 </head>
 <body>
   <div id="map"></div>
 
-  <div class="right-panel">
+  <div class="right-panel" id="right-panel">
       <!-- ▼ 모바일 전용: 패널 토글 버튼 / 오버레이 -->
   <button id="mobile-toggle" class="mobile-toggle" aria-expanded="false" aria-controls="right-panel">
     <span class="icon" aria-hidden="true">▲</span>
@@ -1099,6 +1186,74 @@
       if(dy > 40){ closePanel(); startY = null; }
     }, {passive:true});
   })();
+  (function(){
+  const panel   = document.getElementById('right-panel');
+  const toggle  = document.getElementById('mobile-toggle');
+  const overlay = document.getElementById('panel-overlay');
+
+  const fabDecode = document.getElementById('fab-decode');
+  const fabMain   = document.getElementById('fab-main');
+
+  // FAB 동작: 기존 기능과 동일하게 라우팅
+  fabDecode?.addEventListener('click', ()=> { window.location.href = 'en%26decode.html'; });
+  fabMain  ?.addEventListener('click', ()=> { window.location.href = 'main.html'; });
+
+  if(!panel || !toggle || !overlay) return;
+
+  const isMobile = ()=> window.matchMedia('(max-width: 768px)').matches;
+
+  function openPanel(){
+    if(!isMobile()) return;
+    panel.classList.add('open');
+    overlay.hidden = false;
+    requestAnimationFrame(()=> overlay.classList.add('show'));
+    toggle.setAttribute('aria-expanded','true');
+    toggle.querySelector('.icon').textContent = '▼';
+    toggle.querySelector('.label').textContent = '메뉴 닫기';
+    // 첫 입력 포커스
+    const first = panel.querySelector('input,select,button');
+    first?.focus({preventScroll:true});
+  }
+  function closePanel(){
+    panel.classList.remove('open');
+    overlay.classList.remove('show');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.querySelector('.icon').textContent = '▲';
+    toggle.querySelector('.label').textContent = '메뉴 열기';
+    setTimeout(()=> overlay.hidden = true, 180);
+  }
+  function togglePanel(){
+    panel.classList.contains('open') ? closePanel() : openPanel();
+  }
+
+  toggle.addEventListener('click', togglePanel);
+  overlay.addEventListener('click', closePanel);
+  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && panel.classList.contains('open')) closePanel(); });
+
+  // 뷰포트 전환 시 상태 정리
+  window.addEventListener('resize', ()=>{ if(!isMobile()){ closePanel(); } });
+
+  // UX: 패널 내에서 아래로 스와이프하면 닫기
+  let startY=null;
+  panel.addEventListener('touchstart', e=>{ startY = e.touches?.[0]?.clientY ?? null; }, {passive:true});
+  panel.addEventListener('touchmove',  e=>{
+    if(startY==null) return;
+    const dy = (e.touches?.[0]?.clientY ?? 0) - startY;
+    if(dy > 40){ closePanel(); startY=null; }
+  }, {passive:true});
+
+  // 검색창/정렬버튼 등 클릭 시 자동 열기 (검색만 보이는 문제 회피)
+  const autoOpenTargets = ['#search-bar', '#sort-controls', '#add-region-btn', '#add-drone-btn', '#add-name', '#add-lat', '#add-lng', '#add-region'];
+  autoOpenTargets.forEach(sel=>{
+    const el = document.querySelector(sel);
+    el?.addEventListener('focus', ()=>{ if(isMobile()) openPanel(); }, true);
+    el?.addEventListener('click', ()=>{ if(isMobile()) openPanel(); }, true);
+  });
+})();
 </script>
+<!-- ▼ 고정 FAB: z-index 최상단 -->
+<button id="fab-decode" class="fab fab-left" type="button" title="Decode">Decode</button>
+<button id="fab-main"   class="fab fab-right" type="button" title="Go to Main">Main</button>
+
 </body>
 </html>
