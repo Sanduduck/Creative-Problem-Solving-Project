@@ -144,278 +144,110 @@
       }
     }
     .back-login-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #000;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 1000;
-  border: none;
-}
-.back-login-btn:hover {
-  background: #333;
-}
-/* ===== Mobile bottom sheet ===== */
-@media (max-width: 768px){
-  body { overflow: hidden; }                /* 바텀시트 열릴 때 배경 스크롤 방지용 */
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #000;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 1000;
+      border: none;
+    }
+    .back-login-btn:hover { background: #333; }
 
-  /* 지도는 항상 깔리고, 패널은 고정 포개기 */
-  #map { position: absolute; inset: 0; }
+    /* ===== 모바일 전용 바텀시트(폭 90% + 가운데 버튼) ===== */
+    @media (max-width: 768px){
+      body { overflow: hidden; } /* 바텀시트 열릴 때 배경 스크롤 방지용 */
 
-  /* 기본: 패널을 화면 하단으로 숨김 (translateY(100%)) */
-  .right-panel{
-    position: fixed;
-    left: 0; right: 0; bottom: 0;
-    height: min(78vh, 640px);
-    transform: translateY(calc(100% - 56px)); /* 헤더(핸들)만 보이게 */
-    transition: transform .28s ease-out;
-    border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
-    box-shadow: 0 -8px 24px rgba(0,0,0,.18);
-    z-index: 1002;
-    padding-top: 14px;                         /* 핸들 여백 */
-  }
+      /* 지도는 항상 깔리고, 패널은 고정 포개기 */
+      #map { position: absolute; inset: 0; }
 
-  /* 열림 상태 */
-  .right-panel.open{
-    transform: translateY(0);
-  }
+      /* 패널: 모바일에서 하단 고정 + 폭 90% + 가운데 정렬 */
+      .right-panel{
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        width: 90%;
+        height: min(78vh, 640px);
+        transform: translate(-50%, calc(100% - 56px)); /* 헤더(핸들)만 보이게 (닫힘 상태) */
+        transition: transform .28s ease-out;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        box-shadow: 0 -8px 24px rgba(0,0,0,.18);
+        z-index: 1002;
+        padding-top: 14px;                         /* 핸들 여백 */
+        background: #f7f7f7;                       /* 기존 배경 유지 */
+      }
 
-  /* 패널 상단 핸들바(시각적 힌트) */
-  .right-panel::before{
-    content:"";
-    position:absolute; top:8px; left:50%;
-    width: 42px; height: 4px;
-    transform: translateX(-50%);
-    border-radius: 999px;
-    background:#c9c9c9;
-  }
+      /* 열림 상태: 위로 상승 */
+      .right-panel.open{
+        transform: translate(-50%, 0);
+      }
 
-  /* 패널 토글 버튼 (작게 떠 있는 원형 버튼) */
-  .mobile-toggle{
-    position: fixed;
-    right: 14px; bottom: 14px;
-    z-index: 1003;
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 12px;
-    border: none; border-radius: 999px;
-    background: #000; color:#fff; cursor:pointer;
-    box-shadow: 0 6px 16px rgba(0,0,0,.2);
-    font-size: 14px; font-weight: 700;
-  }
-  .mobile-toggle .icon{ font-size: 14px; line-height: 1; }
-  .mobile-toggle:active{ transform: translateY(1px); }
+      /* 패널 상단 핸들바(시각적 힌트) */
+      .right-panel::before{
+        content:"";
+        position:absolute; top:8px; left:50%;
+        width: 42px; height: 4px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background:#c9c9c9;
+      }
 
-  /* 오버레이 (열릴 때만 표시) */
-  .panel-overlay{
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.35);
-    z-index: 1001;
-    opacity: 0; pointer-events: none;
-    transition: opacity .2s ease;
-  }
-  .panel-overlay.show{
-    opacity: 1; pointer-events: auto;
-  }
+      /* 패널 토글 버튼: 폭 90%, 가운데 정렬 */
+      .mobile-toggle{
+        position: fixed;
+        left: 50%;
+        bottom: 14px;
+        transform: translateX(-50%);
+        z-index: 1003;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        width: 90%;
+        padding: 12px 16px;
+        border: none; border-radius: 999px;
+        background: #000; color:#fff; cursor:pointer;
+        box-shadow: 0 6px 16px rgba(0,0,0,.2);
+        font-size: 16px; font-weight: 700;
+        text-align: center;
+      }
+      .mobile-toggle .icon{ font-size: 16px; line-height: 1; }
+      .mobile-toggle:active{ transform: translateX(-50%) translateY(1px); }
 
-  /* 바텀시트 헤더만 보일 때도 내부 요소 배치가 무너지지 않도록 */
-  .right-panel .search-container{ margin-top: 10px; }
-}
+      /* 오버레이 (열릴 때만 표시) */
+      .panel-overlay{
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.35);
+        z-index: 1001;
+        opacity: 0; pointer-events: none;
+        transition: opacity .2s ease;
+      }
+      .panel-overlay.show{
+        opacity: 1; pointer-events: auto;
+      }
 
-/* 데스크탑에선 토글/오버레이 숨김 */
-@media (min-width: 769px){
-  .mobile-toggle, .panel-overlay{ display: none !important; }
-}
-/* ===== Mobile bottom sheet fix & FABs ===== */
-@media (max-width: 768px){
-  /* 1) 레이아웃 정리: 바텀시트/지도 겹침 문제 방지 */
-  body{
-    display:block !important;     /* 기존 flex → 모바일에선 block */
-    height:100svh;                /* 모바일 주소창 변동 대응 */
-    overflow:hidden;              /* 시트 열릴 때 배경 스크롤 방지 */
-  }
-  #map{
-    position:fixed;
-    inset:0;                      /* 화면 전체에 지도 고정 */
-    z-index:0 !important;
-  }
+      /* 바텀시트 헤더만 보일 때도 내부 요소 배치가 무너지지 않도록 */
+      .right-panel .search-container{ margin-top: 10px; }
+    }
 
-  /* 2) 바텀시트: 기본은 핸들만 보이게 숨김 */
-  .right-panel{
-    position: fixed !important;
-    left: 0; right: 0; bottom: 0;
-    width: 100%;
-    max-height: 85svh;            /* 패널 최대 높이 */
-    height: auto;
-    transform: translateY(calc(100% - 56px));   /* 핸들 바만 보이게 */
-    transition: transform .28s ease-out;
-    border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
-    box-shadow: 0 -8px 24px rgba(0,0,0,.18);
-    z-index: 10020;               /* 지도/오버레이보다 위 */
-    padding-top: 18px;            /* 핸들 여백 */
-    background: #f7f7f7;          /* 패널 배경 재확인 */
-    overflow-y: auto;             /* 패널 내부 스크롤 */
-  }
-  .right-panel.open{ transform: translateY(0); }
-
-  /* 핸들바 */
-  .right-panel::before{
-    content:"";
-    position:absolute; top:8px; left:50%;
-    width: 42px; height: 4px;
-    transform: translateX(-50%);
-    border-radius: 999px;
-    background:#c9c9c9;
-  }
-
-  /* 3) 오버레이 */
-  .panel-overlay{
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.35);
-    z-index: 10010;
-    opacity: 0; pointer-events: none;
-    transition: opacity .2s ease;
-  }
-  .panel-overlay.show{ opacity: 1; pointer-events: auto; }
-
-  /* 4) 열기/닫기 토글 버튼 (작은 둥근 버튼) */
-  .mobile-toggle{
-    position: fixed;
-    right: 14px; bottom: 14px;
-    z-index: 10030;               /* 최상단 */
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 12px;
-    border: none; border-radius: 999px;
-    background: #000; color:#fff; cursor:pointer;
-    box-shadow: 0 6px 16px rgba(0,0,0,.2);
-    font-size: 14px; font-weight: 700;
-  }
-  .mobile-toggle .icon{ font-size: 14px; line-height: 1; }
-  .mobile-toggle:active{ transform: translateY(1px); }
-}
-
-/* 5) 상단 고정 FAB (Decode/Main) — 항상 맨 앞에 노출 */
-.fab{
-  position: fixed;
-  top: 12px;
-  z-index: 11000;                /* 모든 요소 위 */
-  background: #000; color:#fff;
-  border: none; border-radius: 999px;
-  padding: 10px 14px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0,0,0,.24);
-}
-.fab-left { left: 12px; }
-.fab-right{ right: 12px; }
-.fab:hover { background:#333; }
-
-/* 데스크탑에서는 모바일 토글/오버레이만 숨김 */
-@media (min-width: 769px){
-  .mobile-toggle, .panel-overlay{ display: none !important; }
-}
-/* === FAB 버튼 항상 맨 위 === */
-.fab{
-  position: fixed;
-  top: 12px;
-  z-index: 11000;
-  background: #000; color:#fff;
-  border: none; border-radius: 999px;
-  padding: 10px 14px;
-  font-weight: 700; cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0,0,0,.24);
-}
-.fab-left { left: 12px; }
-.fab-right{ right: 12px; }
-.fab:hover { background:#333; }
-
-/* === 모바일 바텀시트 스와이프 전용 === */
-@media (max-width: 768px){
-  body{
-    display:block; height:100svh; overflow:hidden;
-  }
-  #map{
-    position:fixed; inset:0; z-index:0;
-  }
-  .right-panel{
-    position:fixed; left:0; right:0; bottom:0;
-    width:100%; max-height:85svh;
-    background:#f7f7f7;
-    transform:translateY(calc(100% - 50px));
-    transition:transform .25s ease;
-    border-top-left-radius:14px; border-top-right-radius:14px;
-    box-shadow:0 -6px 20px rgba(0,0,0,.2);
-    z-index:10020;
-    overflow-y:auto;
-  }
-  .right-panel.open{ transform:translateY(0); }
-  .right-panel::before{
-    content:"";
-    position:absolute; top:8px; left:50%;
-    width:40px; height:4px;
-    transform:translateX(-50%);
-    border-radius:999px;
-    background:#aaa;
-  }
-}
-/* 기본적으로 숨김 */
-.fab {
-  display: none;
-}
-
-/* 모바일(768px 이하)에서는 표시 */
-@media (max-width: 768px) {
-  .fab {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-@media (max-width: 768px) {
-  body {
-    flex-direction: column; /* 세로 배치로 전환 */
-  }
-
-  #map {
-    flex: none;
-    width: 100%;
-    height: 100%; /* 지도가 기본 전체 */
-  }
-
-  .right-panel {
-    position: fixed;
-    bottom: -100%;
-    left: 0;
-    width: 100%;        /* 👉 모바일에서는 전체 너비 차지 */
-    max-width: 100%;    /* 👉 오른쪽으로 삐져나가지 않게 */
-    height: 85%;        /* 높이는 조정 가능 */
-    transition: bottom 0.4s ease;
-    border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,.25);
-    z-index: 1000;
-  }
-
-  .right-panel.show {
-    bottom: 0;
-  }
-}
-
+    /* 데스크탑에선 토글/오버레이 숨김 */
+    @media (min-width: 769px){
+      .mobile-toggle, .panel-overlay{ display: none !important; }
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
 
   <div class="right-panel" id="right-panel">
-      <!-- ▼ 모바일 전용: 패널 토글 버튼 / 오버레이 -->
-  <button id="mobile-toggle" class="mobile-toggle" aria-expanded="false" aria-controls="right-panel">
-    <span class="icon" aria-hidden="true">▲</span>
-    <span class="label">메뉴 열기</span>
-  </button>
-  <div id="panel-overlay" class="panel-overlay" hidden></div>
+    <!-- ▼ 모바일 전용: 패널 토글 버튼 / 오버레이 -->
+    <button id="mobile-toggle" class="mobile-toggle" aria-expanded="false" aria-controls="right-panel">
+      <span class="icon" aria-hidden="true">▲</span>
+      <span class="label">올라가기</span>
+    </button>
+    <div id="panel-overlay" class="panel-overlay" hidden></div>
 
     <div class="search-container">
       <input type="text" class="search-bar" id="search-bar" placeholder="Enter drone number or name" onkeydown="checkEnter(event)" />
@@ -457,11 +289,11 @@
   </div>
 
   <div class="repository" id="decode-btn" role="button" aria-label="Open Encrypt/Decrypt">Decode</div>
-<button class="back-login-btn" onclick="window.location.href='main.html'">Go to Main</button>
+  <button class="back-login-btn" onclick="window.location.href='main.html'">Go to Main</button>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<script>
+  <script>
     const DEFAULT_STREAM_URL = 'http://192.168.137.98:5002/video_feed';
 
     const regionData = {};
@@ -603,7 +435,7 @@
       applyRoleUI();
     }
 
-    // displayRegion 함수를 수정했습니다.
+    // displayRegion
     function displayRegion(region) {
       currentRegion = region;
       renderRegionList(region);
@@ -1213,62 +1045,75 @@
     if (isTouch) {
       map.on('click', handleMapCoordinatePick);
     }
+
+    /* ===== 모바일 바텀시트 토글 (폭 90% 버튼: 올라가기/내려가기) ===== */
     (function(){
-  const panel = document.getElementById('right-panel');
-  if(!panel) return;
+      const panel = document.getElementById('right-panel');
+      const toggleBtn = document.getElementById('mobile-toggle');
+      const overlay = document.getElementById('panel-overlay');
 
-  // FAB 버튼 이동
-  document.getElementById('fab-decode')?.addEventListener('click', ()=>{
-    window.location.href = 'en&decode.html';
-  });
-  document.getElementById('fab-main')?.addEventListener('click', ()=>{
-    window.location.href = 'main.html';
-  });
+      if(!panel || !toggleBtn || !overlay) return;
 
-  // === 모바일 스와이프 제스처 ===
-  let startY=null, currentY=null, isDragging=false;
+      function isMobile(){ return window.matchMedia('(max-width: 768px)').matches; }
 
-  panel.addEventListener('touchstart', e=>{
-    if(e.touches.length!==1) return;
-    startY = e.touches[0].clientY;
-    currentY = startY;
-    isDragging = true;
-    panel.style.transition = 'none';  // 드래그 시 즉시 반응
-  }, {passive:true});
+      function setBtnState(isOpen){
+        toggleBtn.setAttribute('aria-expanded', String(isOpen));
+        toggleBtn.querySelector('.icon').textContent = isOpen ? '▼' : '▲';
+        toggleBtn.querySelector('.label').textContent = isOpen ? '내려가기' : '올라가기';
+      }
 
-  panel.addEventListener('touchmove', e=>{
-    if(!isDragging) return;
-    currentY = e.touches[0].clientY;
-    const dy = currentY - startY;
-    if(dy>0 && !panel.classList.contains('open')){ // 아래에서 위로 올릴 때
-      panel.style.transform = `translateY(calc(100% - 50px - ${Math.min(dy, window.innerHeight*0.7)}px))`;
-    }else if(dy<0 && panel.classList.contains('open')){ // 위에서 아래로 내릴 때
-      panel.style.transform = `translateY(${Math.min(Math.abs(dy), window.innerHeight*0.7)}px)`;
-    }
-  }, {passive:true});
+      function openPanel(){
+        if(!isMobile()) return;
+        panel.classList.add('open');
+        overlay.hidden = false;
+        requestAnimationFrame(()=> overlay.classList.add('show'));
+        setBtnState(true);
+        const firstInput = panel.querySelector('input,select,button');
+        if(firstInput){ firstInput.focus({preventScroll:true}); }
+      }
 
-  panel.addEventListener('touchend', ()=>{
-    if(!isDragging) return;
-    isDragging=false;
-    panel.style.transition = 'transform .25s ease';
+      function closePanel(){
+        panel.classList.remove('open');
+        overlay.classList.remove('show');
+        setBtnState(false);
+        setTimeout(()=> overlay.hidden = true, 200);
+      }
 
-    if(!panel.classList.contains('open')){
-      // 아래에서 위로 스와이프 → 일정 이상 올리면 열기
-      const moved = startY - currentY;
-      if(moved>60){ panel.classList.add('open'); }
-      else { panel.style.transform = 'translateY(calc(100% - 50px))'; }
-    }else{
-      // 위에서 아래로 스와이프 → 일정 이상 내리면 닫기
-      const moved = currentY - startY;
-      if(moved>60){ panel.classList.remove('open'); }
-      else { panel.style.transform = 'translateY(0)'; }
-    }
-  });
-})();
-</script>
-<!-- ▼ 고정 FAB: z-index 최상단 -->
-<button id="fab-decode" class="fab fab-left" type="button" title="Decode">Decode</button>
-<button id="fab-main"   class="fab fab-right" type="button" title="Go to Main">Main</button>
+      function togglePanel(){
+        if(panel.classList.contains('open')) closePanel(); else openPanel();
+      }
 
+      // 버튼/오버레이 이벤트
+      toggleBtn.addEventListener('click', togglePanel);
+      overlay.addEventListener('click', closePanel);
+
+      // ESC 키로 닫기
+      window.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+      });
+
+      // 데스크탑 전환 시 항상 닫아두기 + 버튼 상태 초기화
+      window.addEventListener('resize', ()=>{
+        if(!isMobile()){
+          closePanel();
+        }else{
+          // 모바일로 전환되면 버튼 상태를 닫힘 기준으로
+          setBtnState(panel.classList.contains('open'));
+        }
+      });
+
+      // 간단 스와이프 제스처(아래로 당기면 닫기)
+      let startY = null;
+      panel.addEventListener('touchstart', (e)=>{ startY = e.touches?.[0]?.clientY ?? null; }, {passive:true});
+      panel.addEventListener('touchmove', (e)=>{
+        if(startY==null) return;
+        const dy = (e.touches?.[0]?.clientY ?? 0) - startY;
+        if(dy > 40){ closePanel(); startY = null; }
+      }, {passive:true});
+
+      // 초기 버튼 상태(닫힘 = 올라가기)
+      setBtnState(false);
+    })();
+  </script>
 </body>
 </html>
