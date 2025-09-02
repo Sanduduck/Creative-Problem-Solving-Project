@@ -240,14 +240,14 @@
 </head>
 <body>
   <div id="map"></div>
-
-  <div class="right-panel" id="right-panel">
-    <!-- ▼ 모바일 전용: 패널 토글 버튼 / 오버레이 -->
-    <button id="mobile-toggle" class="mobile-toggle" aria-expanded="false" aria-controls="right-panel">
+  <button id="mobile-toggle" class="mobile-toggle" aria-expanded="false" aria-controls="right-panel">
       <span class="icon" aria-hidden="true">▲</span>
       <span class="label">올라가기</span>
     </button>
     <div id="panel-overlay" class="panel-overlay" hidden></div>
+  <div class="right-panel" id="right-panel">
+    <!-- ▼ 모바일 전용: 패널 토글 버튼 / 오버레이 -->
+    
 
     <div class="search-container">
       <input type="text" class="search-bar" id="search-bar" placeholder="Enter drone number or name" onkeydown="checkEnter(event)" />
