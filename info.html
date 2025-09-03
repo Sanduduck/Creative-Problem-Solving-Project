@@ -29,7 +29,7 @@
     @media (prefers-color-scheme: dark){ .box{ background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02)); } }
 
     .checkline{display:flex; align-items:center; gap:14px}
-    .check{--size:clamp(24px,3.6vw,30px); width:var(--size); height:var(--size); border-radius:8px; border:2px solid var(--border); display:grid; place-items:center; background:#fff; cursor:pointer}
+    .check{--size:clamp(24px,3.6vw,30px); width:var(--size); height:var(--size); aspect-ratio: 1; border-radius:0; border:2px solid var(--border); display:grid; place-items:center; background:#fff; cursor:pointer}
     .check input{appearance:none; width:100%; height:100%; margin:0; cursor:pointer}
     .check svg{width:70%; height:70%; opacity:0; transform:scale(.85); transition:.2s ease; color:var(--good)}
     .check.checked{border-color:var(--good); background:rgba(22,163,74,.12)}
@@ -49,6 +49,43 @@
 
     .status{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; margin-top:4px}
     .status.error{ color: var(--bad); }
+    /* 모바일 전용 조정 */
+@media (max-width: 768px) {
+  .captcha.open {
+    max-width: 90%;   /* 전체 화면 대비 90% 폭 */
+    margin: 0 auto;   /* 중앙 정렬 */
+  }
+
+  .capCanvasWrap {
+    flex-direction: column; /* 캔버스와 버튼이 세로로 배치되게 */
+    align-items: center;
+  }
+
+  canvas {
+    width: 100%;        /* 화면 폭에 맞춤 */
+    max-width: 300px;   /* 최대 크기를 제한 */
+    height: auto;       /* 세로는 비율에 맞춰 자동 */
+  }
+
+  .capInput input {
+    font-size: 14px;    /* 모바일 가독성 위해 약간 줄임 */
+  }
+}
+@media (max-width: 768px) {
+  .capInput input {
+    color: #000 !important;   /* 항상 검은색 */
+    background: #fff;         /* 흰 배경 유지 */
+    -webkit-text-fill-color: #000; /* iOS 사파리 호환 */
+  }
+}
+/* 모바일 전용 버튼 글씨 색 변경 */
+@media (max-width: 768px) {
+  .capBtns .btn,
+  .capInput .btn {
+    color: #000 !important;   /* 글씨를 항상 검정색 */
+  }
+}
+
   </style>
 </head>
 <body>
