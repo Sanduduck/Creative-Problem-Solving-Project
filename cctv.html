@@ -510,7 +510,16 @@
         onStreamDisconnected(drone);
       }, { once: true });
 
-      img.onclick = () => toggleCCTVZoom();
+      img.addEventListener('click', (e) => {
+  // 확대가 아니면: 기존대로 확대/오버레이/컨트롤 생성
+  if (!img.classList.contains('cctv-expanded')) {
+    toggleCCTVZoom();
+    return;
+  }
+  // 이미 확대 상태면: test.html로 이동
+  window.location.href = 'screen.html';
+});
+
     }
 
     function toggleCCTVZoom() {
