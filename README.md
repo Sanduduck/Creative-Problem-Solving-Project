@@ -107,16 +107,16 @@ screen.html
 
 README에 직접 보여줄 기능도 이미지를 <img> 태그로 삽입하세요. (심사 시 외부 링크 대신 images/ 내 파일 사용 권장)
 
-main (허브)
+#main (허브)
 <img width="2346" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-login (회원가입 / 로그인 흐름)
+#login (회원가입 / 로그인 흐름)
 <img width="2346" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-cctv (관제 대시보드)
+#cctv (관제 대시보드)
 <img width="4735" height="2113" alt="Image" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
 
-en-decode (암/복호화 툴)
+#en-decode (암/복호화 툴)
 <img width="1819" height="1981" alt="Image" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
 
 Tip: GitHub에 올릴 때는 외부 CDN 링크 대신 images/에 복사해 ./images/파일명으로 넣으면 안정적입니다.
