@@ -1,0 +1,190 @@
+:root{
+  --background-theme:#fdfdfd;
+  --panel-bg:#fdfdfd;
+  --text-color:#000;
+  --muted:#000;
+  --accent:#000;
+  --border:#555;
+}
+
+*,html{
+  margin:0;
+  padding:0;
+  font-size:10px;
+  color:var(--text-color);
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{ width:100%; background-color:var(--background-theme); }
+h1{ font-size:3.2rem; }
+p{ font-size:1.2rem; }
+
+/* Sections */
+.login_section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  padding:16px;
+}
+
+.accounts_container{
+  height:550px;
+  min-height:550px;
+  max-height:100%;
+  border-radius:10px;
+  box-shadow:8px 8px 8px rgba(0,0,0,0.25);
+  background-color:var(--panel-bg);
+  overflow:hidden;
+  width:100%;
+  max-width:1100px;
+}
+
+/* 좌측 이미지 영역 */
+.accounts_image img{
+  object-fit:cover;
+  object-position:center;
+  border-top-left-radius:10px;
+  border-bottom-left-radius:10px;
+  filter:brightness(1);
+}
+
+.accounts_col form .form-group{ position:relative !important; }
+.accounts_col form .form-control{
+  font-size:1.6rem;
+  padding:20px 12px 14px 12px;
+  margin-bottom:24px;
+  background:transparent !important;
+  color:#000;
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.accounts_col form .form-control::placeholder{ color:#aaa; }
+
+.accounts_col form label,
+.accounts_col form .form-group i{
+  position:absolute;
+  z-index:1;
+  pointer-events:none;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:1.2rem;
+  left:14px;
+  color:var(--muted);
+  transition:.2s linear;
+}
+
+.change_label{
+  background-color:var(--panel-bg);
+  padding:0 6px;
+  transform:scale(0.9);
+  top:-8px !important;
+  color:#000;
+}
+
+.accounts_col form .form-group i{
+  left:auto !important;
+  right:12px;
+  cursor:pointer;
+  pointer-events:visible;
+  color:#000;
+}
+
+.register_btn{
+  padding:10px 0 !important;
+  font-size:1.6rem !important;
+  font-weight:600 !important;
+  background:var(--accent);
+  border:none;
+}
+
+.already_member_box p,
+.already_member_box span{
+  cursor:pointer;
+  color:#000;
+}
+.login_form, .signup_form{ display:none; }
+
+.title h1{ color:#000; }
+.title p{ color:#000; }
+
+/* 에러/성공 메시지 */
+.msg-error{color:#c62828;font-size:1.3rem;margin-top:-6px;margin-bottom:12px;display:none;}
+.msg-ok{color:#1b5e20;font-size:1.3rem;margin-top:-6px;margin-bottom:12px;display:none;}
+
+/* 반응형 (기본) */
+@media (max-width:992px){
+  .accounts_image{ display:none; }
+  .accounts_container{ max-width:560px; }
+}
+
+/* ===== 모바일 전용 배너 (#signup 내부) + 모드 토글 ===== */
+.mobile-hero{ display:none; }
+
+@media (max-width: 992px){
+  .accounts_container{
+    height:550px;
+    min-height:550px;
+    overflow:hidden;
+  }
+
+  body.mode-signup .accounts_container{
+    height:auto;
+    min-height:0;
+    overflow:visible;
+  }
+  body.mode-signup #signup .mobile-hero{
+    display:block !important;
+    width:100%;
+    margin:0;
+  }
+  body.mode-signup #signup .mobile-hero img{
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio: 1 / 2;
+    object-fit:cover;
+    object-position:50% 40%;
+    border-radius:10px 10px 0 0;
+  }
+
+  .accounts_forms .title{ padding-top:16px; }
+}
+
+/* 데스크탑/노트북 복구(명시적) */
+@media (min-width: 993px){
+  .accounts_image{ display:block !important; }
+  .mobile-hero{ display:none !important; }
+  .accounts_container{
+    height:550px !important;
+    min-height:550px !important;
+    max-height:100% !important;
+    overflow:hidden !important;
+  }
+}
+
+/* 모바일에서 상단 배너 보이게 (이미지+폼 자동 높이) */
+@media (max-width: 992px){
+  .accounts_col{ height: auto !important; }
+  .accounts_image{
+    display: block !important;
+    height: 220px;
+    overflow: hidden;
+  }
+  .accounts_image img{
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: 50% 40%;
+    border-radius: 10px 10px 0 0;
+  }
+  .accounts_container{
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .mobile-hero{ display: none !important; }
+}

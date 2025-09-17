@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video Encrypt/Decrypt · Client-Side (AES-GCM + PBKDF2)</title>
+  <link rel="stylesheet" href="en&decode.css" />
+</head>
+<body>
+  <header>
+    <div class="brandbar">
+      <div class="brand" aria-label="팀 로고와 이름">
+        <img src="../images/logo.png" alt="AlleyEye 로고" />
+        <span class="brand-name">AlleyEye</span>
+      </div>
+    </div>
+    <h1>Video Encrypt/Decrypt (100% Client-Side)</h1>
+    <p class="sub">AES-GCM(256) + PBKDF2-SHA256(310k) · 파일은 서버로 업로드되지 않습니다.</p>
+  </header>
+
+  <main class="card">
+    <div class="row-3">
+      <div>
+        <label>모드</label>
+        <select id="mode">
+          <option value="enc">Encrypt (영상/이미지 → .venc)</option>
+          <option value="dec">Decrypt (.venc → 원본)</option>
+        </select>
+      </div>
+      <div>
+        <label>비밀번호 <span class="hint">(강력한 문장형 권장)</span></label>
+        <input type="password" id="pw" placeholder="예: boat river galaxy lemon" />
+      </div>
+      <div>
+        <label>스테가 모드</label>
+        <select id="stegoMode">
+          <option value="reversible">복원 가능(가역)</option>
+          <option value="expressive">표현(비가역)</option>
+        </select>
+      </div>
+    </div>
+
+    <label>암호화된 비밀번호(스테가 · 자동 복사)</label>
+    <div class="log" id="pwStegoBox" style="max-height:120px; overflow:auto;">—</div>
+
+    <label>스테가 텍스트 붙여넣기(복호화용 · 가역만)</label>
+    <textarea id="stegoIn" placeholder="여기에 스테가 문자열을 붙여넣고 ‘스테가 복호화’를 누르세요."></textarea>
+    <div class="actions">
+      <button class="btn" id="stegoDecBtn">스테가 복호화</button>
+      <span class="muted">※ 표현(비가역) 모드로 만든 텍스트는 복호화할 수 없습니다.</span>
+    </div>
+    <label>복호화된 비밀번호</label>
+    <input id="stegoOut" readonly placeholder="복호화 결과가 여기에 표시됩니다." />
+
+    <label id="fileLabel">영상/이미지 파일</label>
+    <input id="file" type="file" accept="video/*,image/*,.venc" />
+
+    <div class="hint" style="text-align:center">또는 아래 영역에 <strong>끌어다 놓기</strong> 가능합니다.</div>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="여기로 파일을 드롭하거나 클릭하여 선택">
+      <div class="dz-inner">
+        <div class="dz-text"><strong>여기로 파일 드래그</strong><div class="dz-sub">또는 클릭하여 선택 (mp4, webm, png, jpg, .venc)</div></div>
+      </div>
+    </div>
+    <div id="fileInfo" class="fileinfo" aria-live="polite"></div>
+
+    <div class="actions">
+      <button class="btn" id="runBtn">실행</button>
+      <a id="dl" class="btn" style="display:none" download>결과 다운로드</a>
+    </div>
+
+    <label>진행률</label>
+    <progress id="prog" max="1" value="0"></progress>
+
+    <label>결과</label>
+    <div class="result" id="result">
+      <video id="previewVideo" controls style="display:none"></video>
+      <img id="previewImage" alt="이미지 미리보기" style="display:none;max-width:100%;max-height:360px;border-radius:10px;" />
+      <div id="resultInfo" class="muted"></div>
+    </div>
+
+    <label>로그</label>
+    <div class="log" id="log">대기 중…</div>
+  </main>
+
+  <!-- 복사 안내 토스트 -->
+  <div id="copyToast" class="copy-toast">복사되었습니다!</div>
+  <button class="back-login-btn" onclick="window.location.href='../cctv/cctv.html'">Go to CCTV</button>
+
+  <script src="en&decode.js"></script>
+</body>
+</html>

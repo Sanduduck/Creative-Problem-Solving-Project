@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>나는 로봇이 아닙니다 – CAPTCHA</title>
+  <link rel="stylesheet" href="info.css" />
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="사람 인증 영역">
+      <div class="title"></div>
+
+      <div class="box">
+        <div class="checkline">
+          <label class="check" id="checkBox">
+            <input id="chk" type="checkbox" aria-label="나는 로봇이 아닙니다" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          </label>
+          <div>
+            <strong>나는 로봇이 아닙니다</strong>
+            <p class="sub">체크하면 사람이 읽을 수 있는 문자 이미지가 표시됩니다. <b>정확히 입력(대/소문자 구분)</b>하면 이동합니다.</p>
+          </div>
+        </div>
+
+        <div class="captcha" id="captcha">
+          <div class="capCanvasWrap">
+            <canvas id="capCanvas" width="500" height="160" aria-label="사람 판독 캡차"></canvas>
+            <div class="capBtns">
+              <button class="btn" id="btnRefresh" type="button" aria-label="새 이미지">새로고침</button>
+            </div>
+          </div>
+          <div class="capInput">
+            <input id="capInput" placeholder="보이는 글자를 정확히 입력 (대/소문자 구분)" aria-label="캡차 정답 입력" inputmode="text" autocomplete="off" />
+            <button class="btn primary" id="btnVerify" type="button">확인</button>
+          </div>
+          <div class="status" id="statusText">미인증 상태입니다.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="info.js"></script>
+</body>
+</html>

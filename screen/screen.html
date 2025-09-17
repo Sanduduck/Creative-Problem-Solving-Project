@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>Stream Quick Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Split CSS -->
+  <link rel="stylesheet" href="screen.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>Drone Stream Test</h1>
+    <div id="status" class="note">스트림 URL을 확인 중…</div>
+
+    <div class="row">
+      <input id="url" type="text" placeholder="http://192.168.137.98:5002/video_feed" crossorigin="anonymous" />
+      <button id="btnLoad">불러오기</button>
+      <button id="btnBust">캐시무력화</button>
+    </div>
+
+    <!-- MJPEG 스트림은 <img>가 가장 호환이 좋습니다 -->
+    <img id="stream" alt="Live Stream (MJPEG)" />
+
+    <div class="note" style="margin-top:10px">
+      루트(<code>/</code>)에서 <code>404 Not Found</code>는 정상입니다. <code>/video_feed</code> 엔드포인트를 사용하세요.
+    </div>
+  </div>
+
+  <!-- Split JS -->
+  <script src="screen.js"></script>
+</body>
+</html>

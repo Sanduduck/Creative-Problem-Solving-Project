@@ -1,0 +1,83 @@
+@font-face {
+  src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2479807/CosiAzure-Black.woff2") format("woff2");
+  font-family: "Cosi Azure";
+}
+@font-face {
+  src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2479807/ageo-regular.woff2") format("woff2");
+  font-family: "Ageo";
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 100%; }
+body {
+  font-family: "Cosi Azure", sans-serif;
+  text-rendering: optimizeLegibility;
+  color: white;
+  background-color: #151515;
+}
+.hidden { visibility: hidden; opacity: 0; }
+
+/* ========= 인트로 ========= */
+.intro {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: white;
+  z-index: 5;
+}
+.intro__title {
+  color: white;
+  max-width: 45%;
+  text-align: center;
+  mix-blend-mode: difference;
+  z-index: 2;
+  transform: translateY(40px);
+  font-size: clamp(28px, 5vw, 56px);
+}
+.intro__background {
+  position: absolute;
+  top: 0;
+  background-color: black;
+  width: 50%;
+  height: 100%;
+  transform: scaleX(0);
+}
+.intro__background--left { left: 0; transform-origin: left center; }
+.intro__background--right { left: 50%; transform-origin: right center; }
+
+/* ========= 배경 레이아웃 ========= */
+.hero {
+  display: grid;
+  grid-template-columns: 35% 40% 25%;
+  height: 100vh;
+  position: relative;
+}
+.hero__col { height: 100vh; background-size: cover; }
+.hero__col--1 { padding-top: 20%; }
+.hero__col--1 h1 { display: none; }
+
+/* ========= 중앙 브랜드 ========= */
+.brand-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vw, 28px);
+  pointer-events: none;
+}
+.brand-logo {
+  height: clamp(80px, 14vw, 160px);
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+}
+.brand-title {
+  font-size: clamp(48px, 10vw, 110px);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+}

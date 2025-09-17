@@ -1,0 +1,301 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* everything */
+*{ margin:0; padding:0; box-sizing:border-box; }
+a, a:link, a:visited{ text-decoration:none; color:inherit; }
+li{ list-style:none; }
+.container{ width:1140px; margin:0 auto; }
+section{ font-family:'Poppins', sans-serif; padding:5rem 0; }
+section:nth-child(2n){ background-color:#f8f8f8; }
+section .title{ margin-bottom:3rem; }
+section .title h4{ font-size:1.35rem; color:#000; position:relative; }
+section .title h2{ font-size:3.5rem; }
+html{ scroll-behavior:smooth; }
+
+/* Responsive (global) */
+@media (max-width:1024px){
+  header .container{ flex-direction:column; align-items:flex-start; }
+  header nav ul{ flex-direction:column; gap:10px; }
+  main .container{ padding:20px; }
+  .title h2{ font-size:2rem; }
+  .button{ width:100%; }
+}
+@media (max-width:768px){
+  header .container{ align-items:center; }
+  main{ padding:20px; }
+  .title h2{ font-size:1.8rem; }
+  .button{ font-size:1rem; padding:10px 15px; }
+}
+@media (max-width:480px){
+  header .container{ padding:0 10px; }
+  .title h4{ font-size:1.2rem; }
+  .title h2{ font-size:1.5rem; }
+  .button{ font-size:.9rem; padding:8px 12px; }
+}
+
+/* Footer (optional) */
+footer{ background:#333; color:#fff; text-align:center; padding:20px 0; position:relative; bottom:0; width:100%; }
+
+/* header */
+header nav button:hover{ color:#000; }
+header{ background-color:none; }
+header h1 button, header nav a{ color:white; text-decoration:none; }
+header nav button{ background:transparent; border:none; color:white; font-size:16px; }
+header nav button:hover{ color:#333; }
+header{ position:fixed; top:0; width:100%; padding:1rem; z-index:1; }
+header.active{ background-color:black; animation:fadeIn .5s ease-in-out; }
+@keyframes fadeIn{ 0%{opacity:0;} 100%{opacity:1;} }
+header .container{ display:flex; justify-content:space-between; align-items:center; width:100%; }
+header button{ background:transparent; border:0; cursor:pointer; color:black; }
+header h1 button{ font-size:2rem; font-weight:bold; }
+header nav ul{ display:flex; }
+header nav ul li{ padding:10px; }
+header nav ul li button{ font-size:1.2rem; }
+
+/* main */
+main{
+  widows:100%;
+  height:100vh;
+  color:white;
+  background:linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/me.png') center center;
+  background-size:cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+main h4{ font-size:2rem; }
+main h2{
+  font-family:'Varela Round', sans-serif;
+  font-size:3.5rem;
+  max-width:2rem 0;
+  letter-spacing:3px;
+}
+main p{ max-width:500px; margin:0 auto; font-size:1.25rem; }
+main button.download{
+  background:transparent; border:3px solid white; border-radius:20px;
+  padding:1rem 2rem; color:white; font-weight:bold; cursor:pointer; margin-top:3rem;
+}
+main button.mouse{
+  background:transparent; border:none; font-size:2rem; color:white;
+  position:absolute; bottom:1rem; left:50%; transform:translateX(-80%);
+  animation:upDown 1s ease-in-out infinite;
+}
+main h2 span::after{
+  content:""; height:40px; width:3px; background:white; display:inline-block; animation:blink .7s ease-in-out infinite;
+}
+@keyframes blink{ 0%{opacity:1;} 100%{opacity:0;} }
+@keyframes upDown{ 0%{bottom:1rem;} 50%{bottom:1.5rem;} 100%{bottom:1rem;} }
+
+/* about_me */
+section .about-self::after{ content:''; clear:both; display:block; }
+section .about-self .left img{ width:100%; }
+section .about-self .left{ width:50%; float:left; }
+section .about-self .right{ width:50%; float:right; padding:0 2rem; }
+section .about-self .right h3{ font-size:2.25rem; margin-bottom:1rem; }
+section .about-self .right h3 strong{ color:#000; }
+section .about-self .right p{ font-size:1.15rem; margin:1rem 0; }
+section .about-self .right .social a{ font-size:2.5rem; margin-right:.2rem; }
+
+@media (max-width:768px){
+  section .about-self{ display:grid; grid-template-columns:1fr; gap:1.25rem; }
+  section .about-self .left, section .about-self .right{ width:100%; float:none; padding:0; }
+  section .about-self .left img{ width:100%; height:280px; object-fit:cover; border-radius:12px; display:block; }
+  section .about-self .right h3{ text-align:center; font-size:1.5rem; margin-bottom:.75rem; }
+  section .about-self .right p{ max-width:40ch; margin-inline:auto; font-size:1rem; line-height:1.7; }
+  section .about-self .right br{ display:none; }
+}
+@media (max-width:400px){
+  section .about-self .left img{ height:220px; }
+  section .about-self .right h3{ font-size:1.35rem; }
+}
+
+/* what_i_do */
+section .do-me::after{ content:''; display:block; clear:both; }
+section .do-me .do-inner{
+  width:30%; float:left; padding:2rem; background:#fff; margin-right:5%; cursor:pointer;
+}
+section .do-me .do-inner:last-child{ margin-right:0; }
+section .do-me .do-inner .icon i{ font-size:2.5rem; color:#000; }
+section .do-me .do-inner h3{ font-size:2rem; margin:1rem 0; }
+section .do-me .do-inner p{ font-size:1.15rem; }
+section .do-me .do-inner:hover{ background:#000; color:#fff; }
+section .do-me .do-inner:hover .icon i{ color:#fff; }
+
+/* bg */
+.bg{
+  background:url('../images/background.jpg') center center;
+  background-size:contain; background-attachment:fixed; height:650px;
+}
+
+/* portfolio */
+section .portfolio-me::after{ content:''; display:block; clear:both; }
+section .portfolio-me .portfolio-inner{
+  width:30%; margin-right:5%; background:#fff; float:left; padding:1rem 1rem 1.5rem 1rem;
+  border:1px solid #ccc; margin-bottom:3rem;
+}
+section .portfolio-me .portfolio-inner:nth-child(3n){ margin-right:0; }
+section .portfolio-me .portfolio-inner img{ width:100%; display:block; }
+section .portfolio-me .portfolio-inner strong{ color:#000; margin:.5rem 0; display:block; }
+section .portfolio-me .portfolio-inner h3{ font-size:1.75rem; }
+
+/* CONTACT (grid) */
+section .contact-me{
+  --base-width:1900px;
+  width:min(100%, var(--base-width)); margin:0 auto; padding:64px 40px;
+  display:grid; grid-template-columns:.95fr 1.2fr; gap:64px; align-items:start;
+}
+section .contact-me .left{ width:auto; float:none; padding-left:0; }
+section .contact-me .right{
+  width:auto; float:none; margin-left:0; margin-bottom:2rem; padding:24px;
+  border:1px solid #ccc; border-radius:12px; transform:none; background:#fff;
+}
+section .contact-me .left .card{
+  border:1px solid #ccc; border-radius:12px; padding:16px 20px; display:flex; align-items:center; gap:16px; margin-bottom:1.25rem; background:#fff;
+}
+section .contact-me .left .icon i{ font-size:2rem; }
+section .contact-me .right .form-group{ margin-bottom:1.25rem; }
+section .contact-me .right .form-group label{ display:block; margin-bottom:.85rem; }
+section .contact-me .right .form-group input,
+section .contact-me .right .form-group textarea{
+  width:100%; padding:.625rem .75rem; outline:none; border:1px solid #ccc; border-radius:10px; font-size:1rem; background:#fff;
+}
+section .contact-me .right .form-group textarea{ height:300px; resize:vertical; }
+section .contact-me .right button{
+  width:100%; padding:1rem; background:#000; border:none; color:#fff; border-radius:10px; font-size:1rem;
+}
+section .contact-me .right .form-group textarea:focus,
+section .contact-me .right .form-group input:focus{
+  border:1px solid #719ece; box-shadow:0 0 10px #719ece33;
+}
+
+/* contact responsive */
+@media (max-width:1920px){
+  section .contact-me{ gap:48px; padding:56px 32px; }
+}
+@media (max-width:1440px){
+  section .contact-me{ grid-template-columns:1fr 1fr; gap:40px; }
+}
+@media (max-width:1280px){
+  section .contact-me .right{ padding:20px; }
+}
+@media (max-width:992px){
+  section .contact-me{ grid-template-columns:1fr; gap:32px; padding:40px 20px; }
+  section .contact-me .right{ margin-bottom:1.25rem; }
+}
+@media (max-width:600px){
+  section .contact-me{ padding:32px 16px; gap:24px; }
+  section .contact-me .right .form-group label{ margin-bottom:.6rem; }
+  section .contact-me .right .form-group input,
+  section .contact-me .right .form-group textarea{ font-size:.95rem; }
+}
+
+/* global responsive containers */
+@media screen and (max-width:992px){
+  html{ font-size:14px; }
+  main .container{ width:768px; }
+  section .portfolio-me .portfolio-inner{ width:100%; }
+}
+@media screen and (max-width:768px){
+  html{ font-size:13px; }
+  main .container{ width:576px; }
+  section .container{ width:400px; }
+  section .do-me .do-inner{ width:100%; margin-right:0; }
+}
+@media screen and (max-width:576px){
+  html{ font-size:12px; }
+  main .container{ width:400px; }
+  section .container{ width:360px; }
+}
+@media screen and (max-width:400px){
+  html{ font-size:11px; }
+  main .container{ width:320px; }
+  section .container{ width:320px; }
+  main h4{ font-size:1.5rem; }
+  section .title h2{ font-size:3rem; }
+}
+
+/* brand/Logo */
+.logo-btn{ background:transparent; border:none; padding:0; display:inline-flex; align-items:center; cursor:pointer; }
+.logo-img{ height:clamp(24px, 2.2rem, 40px); width:auto; display:block; }
+.logo-btn a{ display:inline-block; }
+
+/* brand layout */
+h1.brand{ display:flex; align-items:center; gap:.5rem; margin:0; line-height:1; }
+
+/* social size tweaks */
+.contact-me .social{ display:flex; gap:0; align-items:center; margin-top:.5rem; }
+.contact-me .social a{ display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:50%; }
+.contact-me .social a i{ font-size:2.8rem; line-height:1; }
+@media (min-width:992px){
+  .contact-me .social a{ width:72px; height:72px; }
+  .contact-me .social a i{ font-size:3rem; }
+}
+.about-self .right .social{ gap:0; }
+.about-self .right .social a i{ font-size:2.8rem; }
+
+/* 모바일 헤더: 슬림 바 + 드롭다운 */
+@media (max-width:768px){
+  :root{ --header-h:64px; }
+  header{ height:var(--header-h); padding:.5rem 1rem; background:black; z-index:9999; }
+  header .container{ flex-direction:row !important; align-items:center !important; gap:.5rem; }
+  header .menu-toggle{ display:inline-flex; margin-left:auto; background:transparent; border:0; color:#fff; font-size:1.6rem; line-height:1; cursor:pointer; }
+  header nav{
+    position:fixed; top:var(--header-h); left:0; right:0; transform:translateY(-100%);
+    transition:transform .25s ease; background:#000; border-top:1px solid #222; z-index:9998;
+  }
+  header nav.open{ transform:translateY(0); }
+  header nav ul{ flex-direction:column !important; gap:0; padding:.25rem .75rem; }
+  header nav ul li{ padding:0; }
+  header nav ul li a, header nav ul li button{
+    display:block; width:100%; text-align:left; padding:.9rem .25rem; font-size:1rem; color:#fff; background:transparent; border:0;
+  }
+  header nav ul li a:hover, header nav ul li button:hover{ background:#111; }
+  body.has-mobile-nav{ overflow:hidden; }
+}
+
+/* About 섹션 모바일 미세 조정 */
+@media (max-width:768px){
+  section .about-self .left img{ height:240px; }
+  section .about-self .right p{ font-size:1.08rem; line-height:1.75; }
+  section .about-self .right h3{ font-size:1.6rem; }
+}
+@media (max-width:400px){
+  section .about-self .left img{ height:200px; }
+  section .about-self .right p{ font-size:1.02rem; }
+  section .about-self .right h3{ font-size:1.45rem; }
+}
+
+/* 모바일: 헤더 최소화(로고 + AlleyEye만) */
+@media (max-width:768px){
+  :root{ --header-h:60px; }
+  body{ padding-top:var(--header-h); }
+  header{ height:var(--header-h); padding:8px 12px; background:#000; z-index:10000; }
+  header .container{ flex-direction:row !important; align-items:center !important; justify-content:center !important; gap:.5rem; }
+  header nav, header .menu-toggle{ display:none !important; }
+  h1.brand{ margin:0; display:flex; align-items:center; gap:.5rem; }
+  .logo-img{ height:28px; width:auto; display:block; }
+  .logo-btn a{ font-size:1.15rem; font-weight:700; color:#fff; }
+}
+
+/* 모바일: 로고 & 타이틀 확대 */
+@media (max-width:768px){
+  :root{ --header-h:clamp(64px, 12vw, 84px); }
+  header{ padding:10px 14px; }
+  header .container{ gap:.75rem; }
+  .logo-img{ height:clamp(36px, 9vw, 56px); width:auto; display:block; }
+  .logo-btn a{ font-size:clamp(1.25rem, 5.2vw, 1.75rem); font-weight:800; letter-spacing:.2px; color:#fff; line-height:1.1; }
+}
+
+/* Animated section states */
+section.animated{ opacity:0; transform:translateY(100px); transition:opacity .8s cubic-bezier(0.4,0,0.2,1), transform .8s cubic-bezier(0.4,0,0.2,1); }
+section.animated.visible{ opacity:1; transform:translateY(0); }
+
+/* Hero 타이핑 문구 전용 폰트 */
+main h2 span{
+  font-family:'Roboto Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-style:italic; letter-spacing:.2px; font-weight:700; display:inline-block;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}

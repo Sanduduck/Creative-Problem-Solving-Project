@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drone CCTV Viewer</title>
+
+  <!-- 외부 CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="cctv.css" />
+</head>
+<body>
+  <div id="map"></div>
+
+  <button id="mobile-toggle" class="mobile-toggle" aria-expanded="false" aria-controls="right-panel">
+    <span class="icon" aria-hidden="true">▲</span>
+    <span class="label">올라가기</span>
+  </button>
+  <div id="panel-overlay" class="panel-overlay" hidden></div>
+
+  <div class="right-panel" id="right-panel">
+    <div class="search-container">
+      <input type="text" class="search-bar" id="search-bar" placeholder="Enter drone number or name" onkeydown="checkEnter(event)" />
+      <button class="search-icon" onclick="searchDrone()" title="Search by ID">&#8594;</button>
+    </div>
+
+    <div class="drone-display" id="drone-display"></div>
+    <div id="notice" class="notice"></div>
+
+    <div class="list-controls" id="sort-controls">
+      <button class="sort-btn" data-mode="insert">추가순</button>
+      <button class="sort-btn" data-mode="insertDesc">추가역순</button>
+      <button class="sort-btn" data-mode="alpha">가나다</button>
+      <button class="sort-btn" data-mode="alphaDesc">가나다역순</button>
+    </div>
+
+    <ul class="drone-list" id="drone-list"></ul>
+
+    <button class="back-button" id="back-button" onclick="goBack()">Back to Region</button>
+
+    <div class="forms">
+      <h4>Add Region</h4>
+      <div class="region-row">
+        <input id="region-name" type="text" placeholder="Region name" />
+        <button class="btn" id="add-region-btn" onclick="addRegion()">Add Region</button>
+      </div>
+      <div id="region-error" class="error"></div>
+
+      <h4>Add Drone</h4>
+      <div class="grid" style="margin-top: 6px;">
+        <input id="add-name" type="text" placeholder="Drone name" />
+        <select id="add-region"></select>
+        <input id="add-lat" type="number" step="any" placeholder="Latitude" />
+        <input id="add-lng" type="number" step="any" placeholder="Longitude" />
+        <button class="btn" id="add-drone-btn" onclick="addDrone()">Add Drone</button>
+      </div>
+      <div id="add-error" class="error"></div>
+    </div>
+  </div>
+
+  <div class="repository" id="decode-btn" role="button" aria-label="Open Encrypt/Decrypt">Decode</div>
+  <button class="back-login-btn" onclick="window.location.href='../main/main.html'">Go to Main</button>
+
+  <!-- 외부 JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- 내부 JS -->
+  <script src="cctv.js"></script>
+</body>
+</html>
