@@ -1,191 +1,173 @@
-# AlleyEye — (대회 제출용) 프로젝트 요약
+AlleyEye — 대회 제출용 README
 
-> **중요:** 이 저장소는 대회 제출용입니다. 제출 전에 아래 체크리스트를 반드시 확인하세요.
+프로젝트명: 객체 탐지 기반 드론 감시 시스템 (팀: 코드톡톡)
+목적: 창의문제해결 경진대회 제출용 배포·데모 문서
+주의: 본 문서는 대회 심사용으로 간결하게 정리되어 있습니다. (로컬에서 http 서버로 실행 권장)
 
-## 한 줄 설명
-AlleyEye — 드론 기반 이동형 CCTV 웹 프로토타입 모음 (클라이언트 사이드 UI + 스트림 뷰어 · 암호화 툴 포함).
+한줄 요약
 
----
+사각지대를 감시하는 이동형 CCTV 드론 + 실시간 관제(지도·스트림) + 클라이언트 사이드 파일 암호화( AES-GCM + PBKDF2 )를 대회용 프로토타입으로 구현한 데모 저장소입니다.
 
-## 목차
-- [제출 전 체크리스트](#제출-전-체크리스트)
-- [폴더 구조 (권장)](#폴더-구조-권장)
-- [파일 역할 (간단)](#파일-역할-간단)
-- [기능도(다이어그램) 삽입 위치](#기능도다이어그램-삽입-위치)
-- [상대경로(링크/이미지) 수정 규칙 & 예시](#상대경로링크이미지-수정-규칙--예시)
-- [테스트 & 로컬 실행 방법](#테스트--로컬-실행-방법)
-- [제출(패키징) 방법](#제출패키징-방법)
-- [주의사항 / 보안 / 금지 코드](#주의사항--보안--금지-코드)
+목차
 
----
+배포 폴더 구조 (추천)
 
-## 제출 전 체크리스트
-1. **모든 HTML 파일이 올바른 상대경로/절대경로로 JS/CSS/이미지/페이지 링크를 참조하는가?**  
-   - 폴더로 분리했으면 `<img>`, `<link>`, `<script>`, `window.location.href` 등 모든 상대경로를 점검.
-2. **`en&decode.html` 같은 파일명에 특수문자(& 등)가 없는가?**  
-   - 특수문자 → URL 인코딩 문제/혼동 발생. `en-decode.html` 권장.
-3. **로컬/서버에서 동작 확인:** `python -m http.server` 등으로 반드시 HTTP로 테스트(파일://는 안 됨).
-4. **불필요한 서버코드가 클라이언트에 포함되어 있지 않은가?** (예: `require('mongoose')` 같은 Node 서버 코드)  
-   - 있다면 제거. 클라이언트 파일에 서버 라이브러리를 넣으면 제출에서 감점/실패 가능.
-5. **이미지 파일이 `images/` 폴더에 모여있는가?** 상대경로가 통일되어 있는가?
-6. **기능도(다이어그램) 파일을 repo에 포함했는가?** (`docs/feature-diagram.png` 권장)
-7. **브라우저 보안(CORS/mixed content) 관련 안내가 README에 포함되어 있는가?**
+빠른 실행 (심사용)
 
----
+주요 기능 (요약)
 
-## 폴더 구조 (권장)
+기능도 (대회 제출용 이미지)
+
+파일별 역할
+
+제출 체크리스트 & 주의사항
+
+배포 폴더 구조 (추천)
 / (repo root)
-├─ index/
-│ ├─ index.html
-│ ├─ index.css
-│ └─ index.js
-├─ main/
-│ ├─ main.html
-│ ├─ main.css
-│ └─ main.js
-├─ cctv/
-│ ├─ cctv.html
-│ ├─ cctv.css
-│ └─ cctv.js
-├─ en-decode/
-│ ├─ en-decode.html
-│ ├─ en-decode.css
-│ └─ en-decode.js
-├─ info/
-│ ├─ info.html
-│ ├─ info.css
-│ └─ info.js
-├─ login/
-│ ├─ login.html
-│ ├─ login.css
-│ └─ login.js
-├─ screen/
-│ ├─ screen.html
-│ ├─ screen.css
-│ └─ screen.js
-├─ docs/
-│ └─ feature-diagram.png
-└─ images/
-├─ logo.png
-├─ logo2.png
-├─ cctv.png
-└─ (기타 이미지)
+├─ README.md
+├─ main.html
+├─ main.css
+├─ main.js
+├─ login.html
+├─ login.css
+├─ login.js
+├─ info.html
+├─ info.css
+├─ info.js
+├─ cctv.html
+├─ cctv.css
+├─ cctv.js
+├─ en-decode.html        # 권장: 'en&decode.html' → 'en-decode.html'
+├─ en-decode.css
+├─ en-decode.js
+├─ screen.html
+├─ screen.css
+├─ screen.js
+├─ images/
+│   ├─ logo.png
+│   ├─ cctv.png
+│   └─ ... (모든 이미지 파일은 여기로)
+└─ docs/
+    └─ 최종 보고서 2차.docx
 
-markdown
-코드 복사
 
----
+권장 규칙: 모든 이미지/아이콘은 ./images/ 아래에 두고 HTML에서 ./images/파일명 형식으로 참조하세요.
+중요: 파일명에 & 같은 특수문자 사용은 피하세요 (en&decode.html → en-decode.html).
 
-## 파일 역할 (간단)
-- `index/` : 인트로(스플래시) → 클릭 시 메인으로 이동. (GSAP 애니메이션)
-- `main/` : 프로젝트 소개 / 포트폴리오 페이지.
-- `cctv/` : 드론/지도/스트림 뷰어, 캡처·녹화·암호화 UI.
-- `en-decode/` : 파일 암호화(.venc) / 복호화 UI (AES-GCM + PBKDF2 + 스테가).
-- `info/` : CAPTCHA(“나는 로봇이 아닙니다”) 페이지.
-- `login/` : 로그인/회원가입 UI (localStorage 기반).
-- `screen/` : Stream Quick Test (MJPEG 이미지 스트림 테스트).
-- `images/` : 모든 이미지(logo, placeholder, mockups 등).
-- `docs/` : 기능도/다이어그램 (README에 `<img>`로 삽입).
+빠른 실행 (심사용)
 
----
+저장소 루트에서 간단한 정적 서버 실행:
 
-## 기능도(다이어그램) 삽입 예시 (README에 넣기)
-이미지 파일을 `docs/feature-diagram.png`에 넣고 아래 코드를 README에 추가:
-
-```markdown
-## 기능도
-
-아래는 기능 흐름도입니다.
-
-<img src="docs/feature-diagram.png" alt="기능도" width="800" />
-상대경로(링크/이미지) 수정 규칙 & 예시
-기본 규칙
-HTML 파일이 X/X.html (각 폴더에 있음)이고 images/는 repo 루트의 images/라면, HTML에서는 이미지 경로를 ../images/파일.png로 쓰세요.
-
-페이지 이동 예시
-
-예: index/index.html에서 main/main.html로 이동시키려면:
-
-js
-코드 복사
-// 원래 (루트에 main.html 있었을 때)
-window.location.href = 'main.html';
-
-// 폴더 분리 후 (index 폴더에서 main 폴더로 가는 상대경로)
-window.location.href = '../main/main.html';
-절대경로(호스팅 루트 기준)를 사용하려면:
-
-js
-코드 복사
-window.location.href = '/main/main.html';
-→ 단, GitHub Pages 등 루트가 달라지면 경로가 깨질 수 있음.
-
-이미지 경로 예시
-
-cctv/cctv.html 내:
-
-html
-코드 복사
-<!-- 원래 -->
-<img src="./images/logo.png" alt="logo" />
-<!-- 변경 (cctv 폴더에서 images 폴더로 올라가야 함) -->
-<img src="../images/logo.png" alt="logo" />
-스크립트/스타일 경로
-
-cctv/cctv.html에서 cctv.js와 cctv.css는 같은 폴더에 있으니:
-
-html
-코드 복사
-<link rel="stylesheet" href="cctv.css">
-<script src="cctv.js"></script>
-(파일이 같은 폴더에 있기 때문에 ../ 불필요)
-
-en&decode 파일명 문제
-
-파일명에 & 같은 특수문자는 피하세요. 제출 직전에 en&decode.html → en-decode.html로 바꿔서, 내부 링크(en%26decode.html 등)도 같이 바꿔야 오류 없음.
-
-자주 바꿔야 하는 문자열(예시) — 빠른 find/replace
-(편집기에서 한 번에 바꾸기 쉬운 대표 항목)
-
-main.html → ../main/main.html (index 폴더 같은 위치에서 참조할 때)
-
-en%26decode.html 또는 en&decode.html → ../en-decode/en-decode.html
-
-./images/... (루트 기준이던 경우) → ../images/... (각 폴더별로 상대경로 맞춤)
-
-window.location.href = 'screen.html' → window.location.href = '../screen/screen.html'
-
-팁: 프로젝트 전체에서 window.location.href = 로 검색하면 이동 관련 경로들을 빠르게 교체할 수 있음.
-
-테스트 & 로컬 실행 방법
-루트에서 간단한 HTTP 서버 실행:
-
-bash
-코드 복사
 python -m http.server 8000
-브라우저에서 http://localhost:8000/index/index.html 열기.
 
-각 페이지(인트로 → 메인 → CCTV → 암호화 등) 순서대로 링크/버튼 동작 확인.
 
-스트림 테스트(screen/screen.html)는 네트워크(방화벽/혼합콘텐츠)에 영향을 받음:
+브라우저에서 접속: http://localhost:8000/main.html
 
-HTTPS 페이지에서 HTTP 스트림은 차단됨 → 페이지를 HTTP로 열거나 스트림을 HTTPS로 제공해야 함.
+흐름: main → login → info(CAPTCHA) → cctv → en-decode → screen
 
-제출(패키징) 방법
-루트 폴더가 완성되면 불필요한 파일(개인 키/비밀번호/노트 등) 삭제.
+스트림 테스트(로컬 MJPEG): screen.html 에서 스트림 URL 입력 후 Load 클릭
 
-전체 폴더를 ZIP으로 압축:
+주요 기능 (요약)
 
-bash
-코드 복사
-zip -r alleyeye_submission.zip index main cctv en-decode info login screen images docs
-제출 양식(온라인 폼)에 ZIP 업로드.
+인트로 / 네비게이션 (main.html) — 프로젝트 소개 및 페이지 연결
 
-주의사항 / 보안 / 금지 코드
-절대 클라이언트 HTML/JS에 require('mongoose'), DB 접속 문자열, 비밀번호 같은 민감정보를 남기지 마세요. (로그인 HTML에 있던 mongoose 코드 → 삭제)
+회원관리 (로컬) (login.html)
 
-제출용은 클라이언트 전용 UI 모음입니다. 서버가 필요한 기능(스트림 중계, DB 등)은 별도로 설명서에 적어 심사자에게 안내하세요.
+회원가입: PBKDF2-SHA256으로 비밀번호 저장(로컬 localStorage)
 
-외부 CDN 사용은 허용되지만, 대회 규정에 따라 외부 네트워크를 차단할 수 있으니 필수 라이브러리는 로컬에 포함시키는 편이 안전합니다.
+로그인: PBKDF2 검증 + 레거시 hash 마이그레이션 지원
 
-파일명에 공백·특수문자·한글 등은 피하는 게 무난합니다.
+CAPTCHA 인증 (info.html) — Canvas 기반 사용자 검증(대/소문자 구분)
+
+관제 대시보드 (cctv.html)
+
+Leaflet 지도에 드론 마커 표시
+
+드론 리스트(지역별) 관리, 추가/삭제(관리자 권한)
+
+스트림 뷰어(이미지 기반 MJPEG), 캡처/녹화(클라이언트 녹화)
+
+캡처/녹화 파일 클라이언트 암호화 (.venc) 기능
+
+암호화 툴 (en-decode.html)
+
+AES-GCM + PBKDF2(310k) 기반 파일 암/복호화 데모
+
+스테가노그래피(PW → 텍스트): 가역/비가역 모드 제공
+
+스트림 테스트 (screen.html) — MJPEG 스트림 연결 테스트 페이지
+
+기능도 (대회 제출용 이미지)
+
+README에 직접 보여줄 기능도 이미지를 <img> 태그로 삽입하세요. (대회 제출 시 심사 자료 이미지 링크로 대체 가능)
+
+main (허브)
+<img width="2346" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+
+login (회원가입 / 로그인 흐름)
+<img width="2346" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+
+cctv (관제 대시보드)
+<img width="4735" height="2113" alt="Image" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
+
+en-decode (암/복호화 툴)
+<img width="1819" height="1981" alt="Image" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
+
+Tip: GitHub 상에서 외부 CDN 이미지 대신 리포지토리의 images/로 복사해 참조하면 안정적입니다.
+
+파일별 역할 (간략)
+
+main.* — 대회용 허브 페이지 (프로젝트 요약, 이동 버튼)
+
+login.* — 로컬 사용자 가입/인증 데모 (심사용)
+
+info.* — CAPTCHA(사람 인증) — 심사 흐름 연결 체크
+
+cctv.* — 메인 관제: 지도, 스트림, 캡처/녹화, 권한 분기
+
+en-decode.* — 암호화 데모: AES-GCM + PBKDF2 + 스테가
+
+screen.* — 스트림(MJPEG) 연결/테스트 페이지
+
+images/ — 모든 UI/기능도 이미지 저장
+
+docs/최종 보고서 2차.docx — 제출용 최종보고서
+
+제출 체크리스트 & 주의사항 (대회용)
+
+ 모든 HTML 파일은 **루트(혹은 심사자 명시 경로)**에 위치시켜 상대경로 깨짐 방지
+
+ images/ 폴더에 사용 이미지 전부 저장 (./images/...)
+
+ 파일명에 특수문자(&, ? 등) 사용 금지 — en&decode.html → en-decode.html 권장
+
+ main.html 등에서 window.location.href = 'xxx.html' 같은 링크는 동일한 폴더일 때만 작동. 폴더 변경 시 상대경로 수정 필요
+
+예: 파일을 pages/로 옮기면 window.location.href = '../main.html' 로 바꿔야 함
+
+ 스트림(외부 IP/MJPEG)은 심사환경 네트워크 제한으로 접근 불가할 수 있음 — 스크린샷/기능도로 보조 설명 필수
+
+ 로컬 실행 권장: python -m http.server 8000 → http://localhost:8000/main.html
+
+ docs/최종 보고서 2차.docx 포함 확인
+
+자주 발생하는 문제 (FAQ)
+
+Q. HTML을 폴더로 옮겼더니 페이지 이동이 안 돼요.
+→ A. 모든 링크(HTML 내부 href, window.location.href, 이미지 src)는 상대경로 기준입니다. 파일 위치를 변경하면 경로을 재설정해야 합니다 (./, ../ 등).
+
+Q. 이미지가 안 보입니다.
+→ A. 이미지 파일이 images/에 있는지, HTML에서 ./images/파일명으로 맞게 지정했는지 확인하세요. 대소문자도 구분됩니다.
+
+Q. en&decode.html 파일명이 문제를 일으켜요.
+→ A. 특수문자 & 때문에 압축/서버/OS에서 문제 발생 가능. en-decode.html로 변경하세요.
+
+제출 문구 (권장)
+
+제출용: AlleyEye_팀_코드톡톡.zip — 루트(HTML들) + images/ + docs/최종 보고서 2차.docx 포함
+
+마무리(심사용 한마디)
+
+이 저장소는 대회 제출용 프로토타입입니다. 심사시는 main.html을 시작점으로 하여 로그인 → CAPTCHA → CCTV 관제 → 암호화 툴 순으로 시연해 주세요. 네트워크 의존 요소(실시간 스트림)는 환경에 따라 연결이 제한될 수 있으니, 기능도 이미지와 docs/최종 보고서 2차.docx를 함께 제출하여 흐름을 보완해 주세요.
+
+Good luck — 팀 코드톡톡
