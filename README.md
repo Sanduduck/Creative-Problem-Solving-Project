@@ -57,7 +57,7 @@
 ---
 
 ## ⚡ 빠른 실행 (심사용)
-```
+
 브라우저에서 접속: https://sanduduck.github.io/Creative-Problem-Solving-Project/
 
 시연 흐름(권장): main → login → info(CAPTCHA) → cctv → en-decode → screen
