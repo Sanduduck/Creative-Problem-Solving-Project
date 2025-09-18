@@ -1,4 +1,4 @@
-# AlleyEye
+# **AlleyEye**
 
 ### 객체 탐지 기반 드론 감시 시스템 — 대회 제출용 (팀 코드톡톡)
 
@@ -103,27 +103,27 @@
 
 ## 📷 결과 (시연용 스크린샷 / 기능도)
 
-**index (인트로)** 
+# **index (인트로)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
 
-**main (허브)** 
+# **main (허브)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/9ba82681-7ebb-449c-89aa-347413ebb13c" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c1bdb499-3cfe-45b4-a9cf-185a9fe01fe2" />
-<img width="1920" height="1080"" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+<img width="1920" height="1080" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-**login (회원가입 / 로그인 흐름) && info (보안 페이지)** 
+# **login (회원가입 / 로그인 흐름) && info (보안 페이지)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/23dffffd-5378-41e1-babe-833243a94c2f" />
 <img width="1918" height="1078" alt="Image" src="https://github.com/user-attachments/assets/5d322584-6af2-4212-9c8e-e1f6d0ff5aff" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
 <img width="1920" height="1080" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-**cctv (관제 대시보드)** 
+# **cctv (관제 대시보드)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
 <img width="1920" height="1080" alt="cctv" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
 
-**en-decode (암/복호화 툴)** 
+# **en-decode (암/복호화 툴)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
 <img width="1920" height="1080" alt="en-decode" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
 
