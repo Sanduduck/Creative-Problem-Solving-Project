@@ -19,7 +19,7 @@
 
 |                                                           **팀장: 박동진**                                                          |                                                           **이승헌**                                                           |                                                        **오유진**                                                        |                                                                **김준영**                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
-| [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico0531](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/luybnah" height=120 width=120> <br/> @luybnah](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/s2865" height=120 width=120> <br/> @s2865](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/yunseo0227" height=120 width=120> <br/> @yunseo0227](https://github.com/Urban-Potato-717) |
+| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=120 width=120> <br/> @lico0531](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @luybnah](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=120 width=120> <br/> @s2865](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/https://github.com/Urban-Potato-717" height=120 width=120> <br/> @yunseo0227](https://github.com/Urban-Potato-717) |
 
 </div>
 
@@ -35,7 +35,7 @@
 
 * **박동진 (팀장)** — BackEnd/FrontEnd 통합(웹앱 개발)
 * **이승헌** — H/W·IoT
-* **오유진** — FrontEnd
+* **오유진** — FrontEnd 보조조
 * **김준영** — H/W 보조
 
 ---
@@ -73,18 +73,28 @@
 
 ```
 / 📂(repo root)
-├─ 📂README.md
-├─ 📂main.html, main.css, main.js      # 허브 / 프로젝트 소개 페이지
-├─ 📂login.html, login.css, login.js   # 회원가입 / 로그인 (localStorage + PBKDF2)
-├─ 📂info.html, info.css, info.js      # CAPTCHA 및 심사용 안내 페이지
-├─ 📂cctv.html, cctv.css, cctv.js      # 관제 대시보드 (지도, 스트림, 캡처/녹화, 암호화)
-├─ 📂en-decode.html, en-decode.css, en-decode.js  # 암복호화 & 스테가 도구
-├─ 📂screen.html, screen.css, screen.js  # 스트림 테스트 (MJPEG)
-├─ 📂images/                            # 모든 이미지(logo, 기능도, 스크린샷)
-└─ docs/
-   └─ 최종 보고서 2차.docx            # 상세 보고서 (제출 파일)
+├─ README.md
+├─ 📂index                 # 인트로 페이지
+│   └─ index.html, index.css, index.js
+├─ 📂main                  # 허브 / 프로젝트 소개 페이지
+│   └─ main.html, main.css, main.js
+├─ 📂login                 # 회원가입 / 로그인 (localStorage + PBKDF2)
+│   └─ login.html, login.css, login.js
+├─ 📂info                  # CAPTCHA 및 심사용 안내 페이지
+│   └─ info.html, info.css, info.js
+├─ 📂cctv                  # 관제 대시보드 (지도, 스트림, 캡처/녹화, 암호화)
+│   └─ cctv.html, cctv.css, cctv.js
+├─ 📂en-decode             # 암복호화 & 스테가 도구
+│   └─ en-decode.html, en-decode.css, en-decode.js
+├─ 📂screen                # 스트림 테스트 (MJPEG)
+│   └─ screen.html, screen.css, screen.js
+├─ 📂images/               # 모든 이미지(logo, 기능도, 스크린샷, etc)
+└─ 📂docs/                 # 제출 파일
+   └─ 최종 보고서.docx            
+   └─ 최종 PPT.docx
+   └─ 최종 영상 제출.docx 
 ```
-
+---
 **주의사항**
 
 * 모든 이미지는 `./images/`에 넣고 HTML에서 `./images/filename.png`로 참조하세요. (대소문자 구분)
@@ -93,13 +103,30 @@
 
 ## 📷 결과 (시연용 스크린샷 / 기능도)
 
-**main (허브)** <img width="800" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+**index (인트로)** 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
 
-**login (회원가입 / 로그인 흐름)** <img width="800" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+**main (허브)** 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/54d33d40-26fe-430b-b855-7e8c501fb9c0" />
+<img width="800" height="800" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-**cctv (관제 대시보드)** <img width="800" alt="cctv" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
+**login (회원가입 / 로그인 흐름)** 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/12b71296-6270-4730-8ef1-6e368dbfcd0e" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/70206588-6d5d-4302-9e70-03476a67f790" />
+<img width="800" height="800" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-**en-decode (암/복호화 툴)** <img width="600" alt="en-decode" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
+**info (보안 페이지)** 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
+
+**cctv (관제 대시보드)** 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
+<img width="800"  height="800" alt="cctv" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
+
+**en-decode (암/복호화 툴)** 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
+<img width="800" height="800" alt="en-decode" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
 
 ---
 
