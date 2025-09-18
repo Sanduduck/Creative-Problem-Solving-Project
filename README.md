@@ -22,7 +22,7 @@
 
 ---
 
-## 🗂 배포 폴더 구조 (추천)
+## 🗂 배포 폴더 구조
 / (repo root)
 ├─ README.md
 ├─ main.html
