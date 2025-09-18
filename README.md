@@ -19,7 +19,7 @@
 
 |                                                           **팀장: 박동진**                                                          |                                                           **이승헌**                                                           |                                                        **오유진**                                                        |                                                                **김준영**                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
-| [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico0531](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/luybnah" height=120 width=120> <br/> @luybnah](https://github.com/luybnah) | [<img src="https://avatars.githubusercontent.com/s2865" height=120 width=120> <br/> @s2865](https://github.com/s2865) | [<img src="https://avatars.githubusercontent.com/yunseo0227" height=120 width=120> <br/> @yunseo0227](https://github.com/yunseo0227) |
+| [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico0531](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/luybnah" height=120 width=120> <br/> @luybnah](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/s2865" height=120 width=120> <br/> @s2865](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/yunseo0227" height=120 width=120> <br/> @yunseo0227](https://github.com/Urban-Potato-717) |
 
 </div>
 
@@ -27,17 +27,16 @@
 
 ## 📅 개발 기간
 
-* 24/09/01 \~ 진행중 (대회 제출용 브랜치 기준)
+* 24/05/25 \~ 진행중 (대회 제출용 브랜치 기준)
 
 ---
 
 ## 👨‍💻 개발 담당 (요약)
 
-* **이승헌 (팀장)** — H/W·IoT · 통신·백엔드/프론트엔드 통합
-* **양한별** — BackEnd 중심 (서버 연동, 젯슨/카메라 연동)
-* **최성원** — FrontEnd·모델 연동 (Flask, DB, YOLOv8 통합)
-* **조윤서** — H/W 보조 (전자회로, 젯슨 설정 보조)
-* **조윤진** — FrontEnd·인증/로그인·UI
+* **박동진 (팀장)** — BackEnd/FrontEnd 통합(웹앱 개발)
+* **이승헌** — H/W·IoT
+* **오유진** — FrontEnd
+* **김준영** — H/W 보조
 
 ---
 
@@ -73,22 +72,21 @@
 ## 📂 프로젝트 구조 (권장)
 
 ```
-/ (repo root)
-├─ README.md
-├─ main.html, main.css, main.js      # 허브 / 프로젝트 소개 페이지
-├─ login.html, login.css, login.js   # 회원가입 / 로그인 (localStorage + PBKDF2)
-├─ info.html, info.css, info.js      # CAPTCHA 및 심사용 안내 페이지
-├─ cctv.html, cctv.css, cctv.js      # 관제 대시보드 (지도, 스트림, 캡처/녹화, 암호화)
-├─ en-decode.html, en-decode.css, en-decode.js  # 암복호화 & 스테가 도구
-├─ screen.html, screen.css, screen.js  # 스트림 테스트 (MJPEG)
-├─ images/                            # 모든 이미지(logo, 기능도, 스크린샷)
+/ 📂(repo root)
+├─ 📂README.md
+├─ 📂main.html, main.css, main.js      # 허브 / 프로젝트 소개 페이지
+├─ 📂login.html, login.css, login.js   # 회원가입 / 로그인 (localStorage + PBKDF2)
+├─ 📂info.html, info.css, info.js      # CAPTCHA 및 심사용 안내 페이지
+├─ 📂cctv.html, cctv.css, cctv.js      # 관제 대시보드 (지도, 스트림, 캡처/녹화, 암호화)
+├─ 📂en-decode.html, en-decode.css, en-decode.js  # 암복호화 & 스테가 도구
+├─ 📂screen.html, screen.css, screen.js  # 스트림 테스트 (MJPEG)
+├─ 📂images/                            # 모든 이미지(logo, 기능도, 스크린샷)
 └─ docs/
    └─ 최종 보고서 2차.docx            # 상세 보고서 (제출 파일)
 ```
 
 **주의사항**
 
-* 파일명에 공백/특수문자 사용 금지 (`&`, `%`, 공백 등). 예: `en&decode.html` → `en-decode.html`
 * 모든 이미지는 `./images/`에 넣고 HTML에서 `./images/filename.png`로 참조하세요. (대소문자 구분)
 
 ---
@@ -105,7 +103,7 @@
 
 ---
 
-## 🧾 스테가노그래피 & 암호화 — 기술 상세 (추가)
+## 🧾 스테가노그래피(자체 제작 알고리즘)  & 암호화 — 기술 상세 (추가)
 
 ### 암호화 요약
 
@@ -137,18 +135,6 @@
 * `images/` — UI 리소스, 기능도, 스크린샷 등
 * `docs/최종 보고서 2차.docx` — 상세 보고서/발표 자료
 
----
-
-## 🧾 제출 체크리스트 (대회용)
-
-* [ ] `main.html`이 루트에 위치 (심사자는 main.html 을 시작점으로 함)
-* [ ] `images/`에 모든 이미지가 있고 상대경로로 정확히 참조되는지 확인
-* [ ] 특수문자/공백 없는 파일명 (예: `en-decode.html`)
-* [ ] `docs/최종 보고서 2차.docx` 포함 여부 확인
-* [ ] 스트림 의존 기능은 스크린샷/기능도로 보완 제출 (네트워크 제한 대비)
-* [ ] 압축 제출 시 루트 구조 유지: `AlleyEye_팀_코드톡톡.zip`
-
----
 
 ## ❗ 자주 발생하는 문제 (FAQ)
 
@@ -177,13 +163,6 @@
 
 ---
 
-### 대회용 한마디
-
-이 저장소는 **대회 심사용 프로토타입**입니다. 심사 시 `main.html`에서 시작하여 **로그인 → CAPTCHA → CCTV 관제 → 암호화 도구** 순으로 시연해 주세요. 네트워크 의존 요소(실시간 스트림)는 환경에 따라 연결 제한이 있으므로 기능도/스냅샷·보고서를 함께 제출해 주세요.
-
-Good luck — 팀 **코드톡톡**
-
----
 
 *원하시면 이 문서를 바로 커밋용으로 정리하거나 `docs/`에 복사해 드립니다.*
 
