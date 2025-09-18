@@ -107,26 +107,25 @@
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
 
 **main (허브)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/54d33d40-26fe-430b-b855-7e8c501fb9c0" />
-<img width="800" height="800" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/9ba82681-7ebb-449c-89aa-347413ebb13c" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c1bdb499-3cfe-45b4-a9cf-185a9fe01fe2" />
+<img width="1920" height="1080"" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-**login (회원가입 / 로그인 흐름)** 
+**login (회원가입 / 로그인 흐름) && info (보안 페이지)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/12b71296-6270-4730-8ef1-6e368dbfcd0e" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/70206588-6d5d-4302-9e70-03476a67f790" />
-<img width="800" height="800" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
-
-**info (보안 페이지)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
+<img width="1920" height="1080" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
 **cctv (관제 대시보드)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
-<img width="800"  height="800" alt="cctv" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
+<img width="1920" height="1080" alt="cctv" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
 
 **en-decode (암/복호화 툴)** 
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
-<img width="800" height="800" alt="en-decode" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
+<img width="1920" height="1080" alt="en-decode" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
 
 ---
 
