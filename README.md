@@ -19,7 +19,7 @@
 
 |                                                           **팀장: 박동진**                                                          |                                                           **이승헌**                                                           |                                                        **오유진**                                                        |                                                                **김준영**                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
-| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=120 width=120> <br/> @lico0531](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @luybnah](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=120 width=120> <br/> @s2865](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/https://github.com/Urban-Potato-717" height=120 width=120> <br/> @yunseo0227](https://github.com/Urban-Potato-717) |
+| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=120 width=120> <br/> @Sanduduck](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico053](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=120 width=120> <br/> @5u0612](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/https://github.com/Urban-Potato-717" height=120 width=120> <br/> @Urban-Potato-717](https://github.com/Urban-Potato-717) |
 
 </div>
 
@@ -112,8 +112,8 @@
 <img width="1920" height="1080"" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
 **login (회원가입 / 로그인 흐름) && info (보안 페이지)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/12b71296-6270-4730-8ef1-6e368dbfcd0e" />
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/70206588-6d5d-4302-9e70-03476a67f790" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/23dffffd-5378-41e1-babe-833243a94c2f" />
+<img width="1918" height="1078" alt="Image" src="https://github.com/user-attachments/assets/5d322584-6af2-4212-9c8e-e1f6d0ff5aff" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
 <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
 <img width="1920" height="1080" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
