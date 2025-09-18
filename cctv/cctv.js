@@ -1,124 +1,18 @@
-// ===================== cctv.html - JavaScript only (with minimal notification addition) =====================
-
-/* ====== 공통 팝업 유틸: alert → 커스텀 팝업으로 표시, confirm 대체 제공 ====== */
-(function(){
-  function showPopup(message, opts={}) {
-    const { title = '', okText = '확인', closeOnBackdrop = true, zIndex = 10050 } = opts;
-
-    const overlay = document.createElement('div');
-    overlay.style.cssText = `
-      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.35); z-index:${zIndex}; padding:16px;
-    `;
-
-    const box = document.createElement('div');
-    box.classList.add('popup-box');
-
-    if (title) {
-      const h = document.createElement('div');
-      h.textContent = title;
-      h.style.cssText = 'font-weight:700; font-size:18px; margin-bottom:8px;';
-      box.appendChild(h);
-    }
-
-    const msg = document.createElement('div');
-    msg.textContent = String(message ?? '');
-    msg.style.cssText = 'white-space:pre-wrap; word-break:break-word; margin:6px 0 16px;';
-    box.appendChild(msg);
-
-    const btn = document.createElement('button');
-    btn.textContent = okText;
-    btn.style.cssText = `
-      padding:10px 18px; border:none; border-radius:10px; background:#000; color:#fff;
-      font-size:14px; cursor:pointer; min-width:96px;
-    `;
-    btn.addEventListener('click', () => { try { document.body.removeChild(overlay); } catch(_) {} });
-    box.appendChild(btn);
-
-    overlay.appendChild(box);
-    if (closeOnBackdrop) {
-      overlay.addEventListener('click', (e)=>{ if (e.target === overlay) { try { document.body.removeChild(overlay); } catch(_) {} }});
-    }
-    document.body.appendChild(overlay);
-    btn.focus?.();
-  }
-
-  function showConfirm(message, opts={}) {
-    return new Promise((resolve)=>{
-      const { title = '', okText = '확인', cancelText = '취소', zIndex = 10050 } = opts;
-
-      const overlay = document.createElement('div');
-      overlay.style.cssText = `
-        position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-        background:rgba(0,0,0,.35); z-index:${zIndex}; padding:16px;
-      `;
-
-      const box = document.createElement('div');
-      box.style.cssText = `
-        background:#fff; border-radius:14px; padding:20px 22px; max-width:520px; width:100%;
-        box-shadow:0 12px 36px rgba(0,0,0,.25); text-align:center; font-size:16px; line-height:1.6;
-      `;
-
-      if (title) {
-        const h = document.createElement('div');
-        h.textContent = title;
-        h.style.cssText = 'font-weight:700; font-size:18px; margin-bottom:8px;';
-        box.appendChild(h);
-      }
-
-      const msg = document.createElement('div');
-      msg.textContent = String(message ?? '');
-      msg.style.cssText = 'white-space:pre-wrap; word-break:break-word; margin:6px 0 16px;';
-      box.appendChild(msg);
-
-      const row = document.createElement('div');
-      row.style.cssText = 'display:flex; gap:8px; justify-content:center;';
-
-      const cancelBtn = document.createElement('button');
-      cancelBtn.textContent = cancelText;
-      cancelBtn.style.cssText = `
-        padding:10px 18px; border:1px solid #ddd; border-radius:10px; background:#fff; color:#333;
-        font-size:14px; cursor:pointer; min-width:96px;
-      `;
-
-      const okBtn = document.createElement('button');
-      okBtn.textContent = okText;
-      okBtn.style.cssText = `
-        padding:10px 18px; border:none; border-radius:10px; background:#000; color:#fff;
-        font-size:14px; cursor:pointer; min-width:96px;
-      `;
-
-      cancelBtn.onclick = ()=>{ try{ document.body.removeChild(overlay);}catch(_){} resolve(false); };
-      okBtn.onclick     = ()=>{ try{ document.body.removeChild(overlay);}catch(_){} resolve(true);  };
-
-      row.appendChild(cancelBtn);
-      row.appendChild(okBtn);
-      box.appendChild(row);
-
-      overlay.appendChild(box);
-      overlay.addEventListener('click', (e)=>{ if(e.target===overlay){ cancelBtn.click(); }});
-      document.body.appendChild(overlay);
-      okBtn.focus?.();
-    });
-  }
-
-  window.showPopup = showPopup;
-  window.showConfirm = showConfirm;
-
-  const _origAlert = window.alert ? window.alert.bind(window) : null;
-  window.alert = function(msg){
-    try { showPopup(msg); } catch(e){ _origAlert && _origAlert(msg); }
-  };
-
-  // ✅ showNotice도 동일 팝업 스타일로 통일 (동작 동일, 표시만 팝업)
-  window.showNotice = (m)=> showPopup(m);
-})();
-
-/* ====== 이하 기존 JS 원본 유지 ====== */
+/* cctv.js
+   Extracted from original single-file cctv.html.
+   Make sure this file is included AFTER leaflet.js in the HTML. */
 
 const DEFAULT_STREAM_URL = 'http://192.168.137.98:5002/video_feed';
 
-const regionData = {};
+const regionData = {
+  '서울': [
+    { id: 1, name: 'Drone 1', lat: 37.5665, lng: 126.9780 },
+    { id: 2, name: 'Drone 2', lat: 37.5675, lng: 126.9790 }
+  ],
+  '부산': [
+    { id: 3, name: 'Drone 3', lat: 35.1796, lng: 129.0756 }
+  ]
+};
 
 let regionOrder = Object.keys(regionData);
 let regionSortMode = 'insert';
@@ -138,29 +32,6 @@ const redIcon = L.icon({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize:[25,41], iconAnchor:[12,41], popupAnchor:[1,-34], shadowSize:[41,41]
 });
-
-/* ===== [NEW] Stream state + Notification helper (JS-only, minimal addition) ===== */
-const _streamStateById = new Map(); // id -> 'connected' | 'disconnected'
-function _notify(title, body) {
-  try {
-    if (!('Notification' in window)) { showNotice(body); return; }
-    if (Notification.permission === 'granted') {
-      new Notification(title, { body, icon: '../images/logo2.png' });
-      return;
-    }
-    if (Notification.permission !== 'denied') {
-      Notification.requestPermission()
-        .then(perm => {
-          if (perm === 'granted') new Notification(title, { body, icon: '../images/logo2.png' });
-          else showNotice(body);
-        })
-        .catch(() => showNotice(body));
-      return;
-    }
-    showNotice(body);
-  } catch { showNotice(body); }
-}
-/* ===== End of minimal addition ===== */
 
 function getRole(){ return localStorage.getItem('ae_role') === 'admin' ? 'admin' : 'viewer'; }
 function isAdmin(){ return getRole() === 'admin'; }
@@ -280,7 +151,6 @@ function renderRegionList(region) {
   applyRoleUI();
 }
 
-// displayRegion
 function displayRegion(region) {
   currentRegion = region;
   renderRegionList(region);
@@ -312,36 +182,18 @@ function displayDroneInfo(drone) {
 
   const img = document.getElementById('cctv-image');
 
-  // ✅ displayDroneInfo(drone) 안에서 img 이벤트 등록 부분 교체
   img.addEventListener('load', () => {
-    const streamBase = streamUrl.split('?')[0];
-    const imgSrcBase = (img.currentSrc || img.src).split('?')[0];
-    const isRealStream = imgSrcBase.indexOf(streamBase) === 0;
-
-    if (isRealStream) {
-      onStreamConnected(drone);
-      if (_streamStateById.get(drone.id) !== 'connected') {
-        _notify('드론 스트림 연결', `${drone.name}의 실시간 영상이 연결되었습니다.`);
-      }
-      _streamStateById.set(drone.id, 'connected');
-    }
-  });
+    const same = img.src.indexOf(streamUrl) === 0 || img.src === streamUrl;
+    if (same) onStreamConnected(drone);
+  }, { once: true });
 
   img.addEventListener('error', () => {
     showNotice('스트림에 연결할 수 없습니다. (임시 이미지로 표시)');
     img.src = '../images/cctv.png';
     onStreamDisconnected(drone);
-    _streamStateById.set(drone.id, 'disconnected');
   }, { once: true });
 
-  img.addEventListener('click', (e) => {
-    if (!img.classList.contains('cctv-expanded')) {
-      toggleCCTVZoom();
-      return;
-    }
-    window.location.href = '../screen/screen.html';
-  });
-
+  img.onclick = () => toggleCCTVZoom();
 }
 
 function toggleCCTVZoom() {
@@ -372,7 +224,7 @@ function createControlsForImage(img) {
   const controls = document.createElement('div');
   controls.id = 'cctv-controls';
   controls.className = 'cctv-controls';
-  controls.innerHTML = `   
+  controls.innerHTML = `
     <button type="button" class="cctv-btn" id="btn-capture">캡쳐</button>
     <button type="button" class="cctv-btn" id="btn-save">지금까지 녹화 저장</button>
   `;
@@ -471,39 +323,19 @@ function goBack() {
 }
 
 function searchDrone() {
-  const input = document.getElementById('search-bar').value.trim();
-  if (!input) {
-    alert('Please enter a drone ID or name.');
-    return;
-  }
-
-  const numericId = parseInt(input);
-  let found = null;
-
-  if (!isNaN(numericId)) {
-    for (const region in regionData) {
-      found = (regionData[region] || []).find(d => d.id === numericId);
-      if (found) break;
+  const val = parseInt(document.getElementById('search-bar').value);
+  if (isNaN(val)) { alert('Enter a numeric drone id'); return; }
+  for (const region in regionData) {
+    const found = (regionData[region] || []).find(d => d.id === val);
+    if (found) {
+      displayDroneInfo(found);
+      map.setView([found.lat, found.lng], 18);
+      document.getElementById('back-button').style.display = 'block';
+      return;
     }
   }
-
-  if (!found) {
-    const normalizedInput = normalizeName(input);
-    for (const region in regionData) {
-      found = (regionData[region] || []).find(d => normalizeName(d.name) === normalizedInput);
-      if (found) break;
-    }
-  }
-
-  if (found) {
-    displayDroneInfo(found);
-    map.setView([found.lat, found.lng], 18);
-    document.getElementById('back-button').style.display = 'block';
-  } else {
-    alert('Not found');
-  }
+  alert('Not found');
 }
-
 function checkEnter(e) { if (e.key === 'Enter') searchDrone(); }
 
 function getNextDroneId() {
@@ -514,20 +346,19 @@ function getNextDroneId() {
   return max + 1;
 }
 
-// showNotice는 위에서 팝업으로 대체됨 (기능 유지, 표시만 통일)
+function showNotice(msg) {
+  const el = document.getElementById('notice');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
 
-/* ===== 기존 addDrone() 교체 버전 (지역명-좌표 불일치 시 추가 중단) ===== */
-async function addDrone() {
+function addDrone() {
   if (!isAdmin()) { showNotice('권한이 없습니다. (관리자 전용)'); return; }
-
   const name   = (document.getElementById('add-name').value || '').trim();
-  const latStr = document.getElementById('add-lat').value;
-  const lngStr = document.getElementById('add-lng').value;
+  const lat    = parseFloat(document.getElementById('add-lat').value);
+  const lng    = parseFloat(document.getElementById('add-lng').value);
   const region = document.getElementById('add-region').value;
   const err    = document.getElementById('add-error');
-
-  const lat = parseFloat(latStr);
-  const lng = parseFloat(lngStr);
 
   if (!name || isNaN(lat) || isNaN(lng) || !region) {
     err.innerText = 'Fill all fields';
@@ -540,28 +371,8 @@ async function addDrone() {
     return;
   }
 
-  try {
-    const inferred = await getRegionNameFromCoords(lat, lng);
-    if (inferred) {
-      const selNorm = normalizeName(region);
-      const infNorm = normalizeName(inferred);
-      if (selNorm !== infNorm) {
-        err.innerText = `현재 좌표는 '${inferred}'(으)로 인식됩니다. 선택한 지역과 다릅니다.`;
-        err.style.display = 'block';
-        return;
-      }
-    } else {
-      err.innerText = '좌표로부터 지역을 확인할 수 없습니다. 좌표를 다시 선택하거나 지역을 확인해주세요.';
-      err.style.display = 'block';
-      return;
-    }
-  } catch (e) {
-    err.innerText = '지역 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
-    err.style.display = 'block';
-    return;
-  }
-
   err.style.display = 'none';
+
   const newDrone = { id: getNextDroneId(), name, lat, lng };
   (regionData[region] || (regionData[region] = [])).push(newDrone);
 
@@ -603,6 +414,7 @@ function updateRegionDropdown() {
 }
 
 document.getElementById('decode-btn')?.addEventListener('click', () => {
+  // if your file is renamed to en-decode.html, update path accordingly
   window.location.href = '../en&decode/en%26decode.html';
 });
 
@@ -831,7 +643,7 @@ async function saveRecordingEncrypted(){
 
 /* ===== Reverse Geocoding (global) ===== */
 const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/reverse';
-const USER_AGENT_CONTACT = 'DroneCCTVViewer/1.0 (your-email@example.com)';
+const USER_AGENT_CONTACT = 'DroneCCTVViewer/1.0 (your-email@example.com)'; // 변경 권장
 
 const _revCache = new Map();
 function _cacheKey(lat, lng) {
@@ -885,49 +697,38 @@ function normalizeKoreanRegion(name) {
 // ======= Map coordinate pick handler (desktop: right-click, mobile: tap) =======
 async function handleMapCoordinatePick(e) {
   const { lat, lng } = e.latlng;
-  const latInp    = document.getElementById('add-lat');
-  const lngInp    = document.getElementById('add-lng');
-  const nameInp   = document.getElementById('add-name');
+  const latInp = document.getElementById('add-lat');
+  const lngInp = document.getElementById('add-lng');
+  const nameInp = document.getElementById('add-name');
   const regionSel = document.getElementById('add-region');
 
-  // 1) 좌표 입력
   if (latInp) latInp.value = lat.toFixed(6);
   if (lngInp) lngInp.value = lng.toFixed(6);
 
-  // 2) 기본 이름/현재 Region 선선택 (기존 로직 유지)
   if (nameInp && !nameInp.value.trim()) {
     nameInp.value = `Drone ${getNextDroneId()}`;
   }
+
   if (regionSel && currentRegion && [...regionSel.options].some(o => o.value === currentRegion)) {
     regionSel.value = currentRegion;
   }
 
-  // 3) 역지오코딩으로 좌표의 실제 지역 확인
   const inferred = await getRegionNameFromCoords(lat, lng);
-
-  // 정규화 비교 함수
-  const eq = (a, b) => normalizeName(a || '') === normalizeName(b || '');
 
   if (inferred) {
     const hasRegion = Object.keys(regionData).some(r => r === inferred);
-
     if (!hasRegion) {
-       showNotice(`${inferred} 지역을 먼저 추가해주세요.`);
-        return;
+      alert(`${inferred} 지역을 먼저 추가해주세요.`);
+      showNotice(`${inferred} 지역을 먼저 추가해주세요.`);
+    } else {
+      if (regionSel && regionSel.value && regionSel.value !== inferred) {
+        alert(`현재 좌표와 지역의 좌표가 다릅니다. (추천: ${inferred})`);
+      } else if (regionSel && !regionSel.value) {
+        regionSel.value = inferred;
+      }
     }
-
-    if (regionSel && regionSel.value && !eq(regionSel.value, inferred)) {
-      alert(`현재 좌표와 지역의 좌표가 다릅니다. (추천: ${inferred})`);
-      return;
-    }
-
-    if (regionSel && !regionSel.value) {
-      regionSel.value = inferred;
-    }
-
-    showNotice(`좌표가 성공적으로 입력되었습니다.\n(${lat.toFixed(6)}, ${lng.toFixed(6)})`);
   } else {
-    showNotice('좌표는 입력되었으나 지역 확인에 실패했습니다. 지역을 수동으로 선택해 주세요.');
+    showNotice(`좌표 입력됨: ${lat.toFixed(6)}, ${lng.toFixed(6)} (지도 선택)`);
   }
 }
 
@@ -937,87 +738,3 @@ const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 if (isTouch) {
   map.on('click', handleMapCoordinatePick);
 }
-
-/* ===== 모바일 바텀시트 토글 (폭 90% 버튼: 올라가기/내려가기) ===== */
-(function(){
-  const panel = document.getElementById('right-panel');
-  const toggleBtn = document.getElementById('mobile-toggle');
-  const overlay = document.getElementById('panel-overlay');
-
-  if(!panel || !toggleBtn || !overlay) return;
-
-  function isMobile(){ return window.matchMedia('(max-width: 768px)').matches; }
-
-  function setBtnState(isOpen){
-    toggleBtn.setAttribute('aria-expanded', String(isOpen));
-    toggleBtn.querySelector('.icon').textContent  = isOpen ? '▼' : '▲';
-    toggleBtn.querySelector('.label').textContent = isOpen ? '내려가기' : '올라가기';
-  }
-
-  function showToggle(){ toggleBtn.style.display = 'inline-flex'; }
-  function hideToggle(){ toggleBtn.style.display = 'none'; }
-
-  function openPanel(){
-    if(!isMobile()) return;
-    if (panel.classList.contains('open')) return;
-
-    panel.classList.add('open');
-    overlay.hidden = false;
-    requestAnimationFrame(()=> overlay.classList.add('show'));
-    setBtnState(true);
-
-    const onEnd = (e)=>{
-      if(e.propertyName !== 'transform') return;
-      panel.removeEventListener('transitionend', onEnd);
-      hideToggle();
-    };
-    panel.addEventListener('transitionend', onEnd);
-    setTimeout(()=>{ if (panel.classList.contains('open')) hideToggle(); }, 320);
-
-    const firstInput = panel.querySelector('input,select,button');
-    if(firstInput){ firstInput.focus({preventScroll:true}); }
-  }
-
-  function closePanel(){
-    if(!panel.classList.contains('open')) return;
-
-    panel.classList.remove('open');
-    overlay.classList.remove('show');
-    setBtnState(false);
-
-    showToggle();
-
-    setTimeout(()=> overlay.hidden = true, 200);
-  }
-
-  function togglePanel(){
-    if(panel.classList.contains('open')) closePanel(); else openPanel();
-  }
-
-  toggleBtn.addEventListener('click', togglePanel);
-  overlay.addEventListener('click', closePanel);
-
-  window.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape' && panel.classList.contains('open')) closePanel();
-  });
-
-  window.addEventListener('resize', ()=>{
-    if(!isMobile()){
-      closePanel();
-    }else{
-      if (panel.classList.contains('open')) { hideToggle(); setBtnState(true); }
-      else { showToggle(); setBtnState(false); }
-    }
-  });
-
-  let startY = null;
-  panel.addEventListener('touchstart', (e)=>{ startY = e.touches?.[0]?.clientY ?? null; }, {passive:true});
-  panel.addEventListener('touchmove', (e)=>{
-    if(startY==null) return;
-    const dy = (e.touches?.[0]?.clientY ?? 0) - startY;
-    if(dy > 40){ closePanel(); startY = null; }
-  }, {passive:true});
-
-  showToggle();
-  setBtnState(false);
-})();
