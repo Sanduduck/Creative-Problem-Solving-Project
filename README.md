@@ -1,7 +1,7 @@
 # **AlleyEye**
 
 ### 객체 탐지 기반 드론 감시 시스템 — 대회 제출용 (팀 코드톡톡)
-### 사이트 : https://sanduduck.github.io/Creative-Problem-Solving-Project/
+### 배포 사이트 : https://sanduduck.github.io/Creative-Problem-Solving-Project/
 ---
 
 ## 📌 프로젝트 소개
